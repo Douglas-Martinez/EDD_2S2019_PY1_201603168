@@ -20,15 +20,19 @@ void listafil::insertar(int f)
         inicio = nuevo;
     } else
     {
-        nodofil *actual = inicio;
+        nodofil *actual, *anterior;
+        actual = anterior = inicio;
         while((actual->sig != NULL) && (nuevo->fil > actual->fil))
         {
+            anterior = actual;
             actual = actual->sig;
         }
-
-        nuevo->sig = actual->sig;
-        actual->sig = nuevo;
-
+        if(nuevo->fil > actual->fil)
+        {
+            anterior = actual;
+        }
+        nuevo->sig = anterior->sig;
+        anterior->sig = nuevo;
     }
 }
 

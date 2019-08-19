@@ -17,15 +17,19 @@ void listacol::insertar(int c)
         inicio = nuevo;
     } else
     {
-        nodocol *actual = inicio;
+        nodocol *actual, *anterior;
+        actual = anterior = inicio;
         while((actual->sig != NULL) && (nuevo->col > actual->col))
         {
+            anterior = actual;
             actual = actual->sig;
         }
-
-        nuevo->sig = actual->sig;
-        actual->sig = nuevo;
-
+        if(nuevo->col > actual->col)
+        {
+            anterior = actual;
+        }
+        nuevo->sig = anterior->sig;
+        anterior->sig = nuevo;
     }
 }
 

@@ -8,7 +8,7 @@ class nodomatriz
     public:
         int fila;
         int columna;
-        //int capa;
+        int capa;
         int r;
         int g;
         int b;
@@ -19,14 +19,14 @@ class nodomatriz
         //nodomatriz *frente;
         //nodomatriz *atras;
 
-        nodomatriz(int f, int c, int red, int green, int blue)
+        nodomatriz(int f, int c, int z)
         {
             fila = f;
             columna = c;
-            //capa = z;
-            r = red;
-            g = green;
-            blue = b;
+            capa = z;
+            //r = red;
+            //g = green;
+            //blue = b;
 
             arriba = NULL;
             abajo = NULL;

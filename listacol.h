@@ -7,9 +7,7 @@ class listacol
 {
     public:
         nodocol *inicio;
-
         listacol();
-
         void insertar(int c);
         nodocol* buscar(int c);
 };
