@@ -128,7 +128,7 @@ void matriz::graficar()
     if(f)
     {
         fprintf(f,"digraph matriz{\r\n");
-        fprintf(f,"00000000[label=\"Matriz\",pos=\"0,0!\", color=\"gray\", shape=\"box\"];\r\n");
+        fprintf(f,"00000000[label=\"Matriz\",pos=\"0,0!\", style=\"filled\", fontcolor=\"white\", color=\"black\", shape=\"box\"];\r\n");
         if (filas->inicio != NULL && columnas->inicio != NULL)
         {
             fprintf(f,"\"00000000\"->\"F%i\";\r\n",filas->inicio->fil);
@@ -148,7 +148,7 @@ void matriz::generarCeldas(FILE **f)
     nodofil *auxF = filas->inicio;
     while(auxF != NULL)
     {
-        fprintf((*f),"\"F%i\"[label=\"F%i\", style=\"filled\", pos=\"0,%i!\", color=\"honeydew1\", shape=\"box\"];\r\n",auxF->fil,auxF->fil,(0-auxF->fil));
+        fprintf((*f),"\"F%i\"[label=\"F%i\", style=\"solid\", pos=\"0,%i!\", shape=\"box\"];\r\n",auxF->fil,auxF->fil,(0-auxF->fil));
         auxF =auxF->sig;
     }
     auxF = filas->inicio;
@@ -171,7 +171,7 @@ void matriz::generarCeldas(FILE **f)
     nodocol *auxC = columnas->inicio;
     while(auxC != NULL)
     {
-        fprintf((*f),"\"C%i\"[label=\"C%i\", style=\"filled\", pos=\"%i,0!\", color=\"honeydew1\", shape=\"box\"];\r\n",auxC->col,auxC->col,(auxC->col));
+        fprintf((*f),"\"C%i\"[label=\"C%i\", style=\"solid\", pos=\"%i,0!\", shape=\"box\"];\r\n",auxC->col,auxC->col,(auxC->col));
         auxC =auxC->sig;
     }
     auxC = columnas->inicio;
@@ -226,7 +226,7 @@ void matriz::generarCeldas(FILE **f)
         while(auxM != NULL)
         {
             fprintf((*f),"->\"%p\"",auxM);
-            auxM = auxM->der;
+            auxM = auxM->abajo;
         }
         fprintf((*f),"\n[dir=both];\r\n");
         auxC = auxC->sig;
