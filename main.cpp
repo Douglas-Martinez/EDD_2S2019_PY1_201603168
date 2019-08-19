@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 
-#include "abb.cpp"
+#include "Clases/abb.cpp"
+#include "Clases/matriz.cpp"
 
 using namespace std;
 
@@ -9,14 +10,15 @@ void menu();
 
 int main()
 {
-    string lol = "";
-    cout << "Proyecto No. 1 - 201603168" << endl;
-    cout << endl;
-
-    //abb* arbolb = new abb();
-    //arbolb->graficar();
-    menu();
-
+    //cout << "Proyecto No. 1 - 201603168\n" << endl;
+    //abb *aABB = new abb();
+    //aABB->graficar();
+    matriz *matrix = new matriz(1,"Uno1");
+    matrix->insertar(2,3);
+    matrix->insertar(2,1);
+    matrix->insertar(5,6);
+    matrix->graficar();
+    //menu();
     return 0;
 }
 
