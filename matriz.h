@@ -17,9 +17,10 @@ class matriz
         matriz(int z, std::string n);
         void insertar(int f, int c, int r, int g, int b);
         void insertar(int f, int c);
+        void poner(nodomatriz *n);
         nodomatriz *buscar(int f, int c);
 
-        void graficar();
+        void graficar(int n);
         void generarCeldas(FILE **f);
 };
 

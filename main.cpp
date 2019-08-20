@@ -3,6 +3,7 @@
 
 #include "Clases/abb.cpp"
 #include "Clases/matriz.cpp"
+#include "Clases/listacapas.cpp"
 
 using namespace std;
 
@@ -17,7 +18,22 @@ int main()
     matrix->insertar(2,3);
     matrix->insertar(2,1);
     matrix->insertar(5,6);
-    matrix->graficar();
+
+    matriz *matrix2 = new matriz(2,"Dos2");
+    matrix2->insertar(1,2);
+    matrix2->insertar(3,1);
+    matrix2->insertar(4,4);
+    matrix2->insertar(2,1);
+
+    listacapas *lista1 = new listacapas("Mario");
+    lista1->insertar(new nodolistacapa(matrix2->capa,matrix2->nombre,matrix2));
+    lista1->insertar(new nodolistacapa(matrix->capa,matrix->nombre,matrix));
+    //lista1->graficar_capas();
+    //lista1->sobreponer();
+    //lista1->todo->graficar(lista1->todo->capa);
+    lista1->linealizar();
+    //lista1->todo->graficar(-1);
+    lista1->linealizada->graficar();
     //menu();
     return 0;
 }

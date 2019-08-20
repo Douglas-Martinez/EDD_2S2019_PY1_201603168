@@ -90,8 +90,7 @@ void matriz::insertar(int f, int c)
     } else
     {
         std::cout << "Si existe" << std::endl;
-    }
-    
+    }   
 }
 
 nodomatriz* matriz::buscar(int f, int c)
@@ -116,10 +115,19 @@ nodomatriz* matriz::buscar(int f, int c)
     return NULL;
 }
 
-void matriz::graficar()
+void matriz::graficar(int n)
 {
-    std::string rut = "Capa_" + nombre + ".dot";
-    std::string img = "Capa_" + nombre + ".png";
+    std::string rut;
+    std::string img;
+    if(n == -1)
+    {
+        rut = nombre + ".dot";
+        img = nombre + ".png";
+    } else 
+    {
+        rut = "Capa_" + nombre + ".dot";
+        img = "Capa_" + nombre + ".png";
+    }
     std::string com = "neato -Tpng " + rut + " -o " + img;
     std::string dis = "eog " + img;
     
@@ -199,7 +207,7 @@ void matriz::generarCeldas(FILE **f)
             nodomatriz *auxM = auxF->der;
             while(auxM != NULL)
             {
-                fprintf((*f),"\"%p\"[label=\"%i,%i\", style=\"filled\", pos=\"%i,%i!\", shape=\"box\"];\r\n", auxM,auxM->fila,auxM->columna,auxM->columna,(0-auxM->fila));
+                fprintf((*f),"\"%p\"[label=\"(%i,%i),C:%i\", style=\"filled\", pos=\"%i,%i!\", shape=\"box\"];\r\n", auxM,auxM->fila,auxM->columna,auxM->capa,auxM->columna,(0-auxM->fila));
                 auxM = auxM->der;
             }
             auxF = auxF->sig;
@@ -231,4 +239,86 @@ void matriz::generarCeldas(FILE **f)
         fprintf((*f),"\n[dir=both];\r\n");
         auxC = auxC->sig;
     }
+}
+
+void matriz::poner(nodomatriz *n)
+{
+    nodomatriz *b = buscar(n->fila,n->columna);
+    if(b == 0)
+    {
+        nodomatriz *nuevo = n;
+        nodofil *auxF = filas->buscar(n->fila);
+        nodocol *auxC = columnas->buscar(n->columna);
+        
+        //Asignar en filas;
+        if(auxF == NULL)
+        {
+            auxF = new nodofil(n->fila);
+            filas->insertar(n->fila);
+            auxF = filas->buscar(n->fila);
+            auxF->der = nuevo;
+        } else 
+        {
+            //Va antes del primero
+            if(nuevo->columna < auxF->der->columna)
+            {
+                nuevo->der = auxF->der;
+                auxF->der->izq = nuevo;
+                auxF->der = nuevo;
+            } else
+            {
+                nodomatriz *auxM = auxF->der;
+                while (auxM->der != NULL)
+                {
+                    if(nuevo->columna < auxM->der->columna)
+                    {
+                        nuevo->der = auxM->der;
+                        auxM->der->izq = nuevo;
+                        nuevo->izq = auxM;
+                        auxM->der = nuevo;
+                        break;
+                    }
+                    auxM = auxM->der;
+                }
+                auxM->der = nuevo;
+                nuevo->izq = auxM;   
+            }
+        }
+
+        //Asignar en columnas
+        if(auxC == NULL)
+        {
+            auxC = new nodocol(n->columna);
+            columnas->insertar(n->columna);
+            auxC = columnas->buscar(n->columna);
+            auxC->abajo = nuevo;
+        } else
+        {
+            if(nuevo->fila < auxC->abajo->fila)
+            {
+                nuevo->abajo = auxC->abajo;
+                auxC->abajo->arriba = nuevo;
+                auxC->abajo = nuevo;
+            } else
+            {
+                nodomatriz *auxM = auxC->abajo;
+                while (auxM->abajo != NULL)
+                {
+                    if (nuevo->fila < auxM->abajo->fila)
+                    {
+                        nuevo->abajo = auxM->abajo;
+                        auxM->abajo->arriba = nuevo;
+                        nuevo->arriba = auxM;
+                        auxM->abajo = nuevo;
+                        break;
+                    }
+                }
+                auxM->abajo = nuevo;
+                nuevo->arriba = auxM;
+            }
+        }
+    } else
+    {
+        b->capa = n->capa;
+    }   
 }
