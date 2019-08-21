@@ -5,39 +5,39 @@
 
 using namespace std;
 
-void abb::insertar(string n, int dh, int dw, int ph, int pw)
+void abb::insertar(string n, int dh, int dw, int ph, int pw, listacapas *l)
 {
     if(raiz != NULL)
     {
-        insertar(raiz,n,dh,dw,ph,pw);
+        insertar(raiz,n,dh,dw,ph,pw,l);
     }
     else
     {
-        raiz = new nodoabb(n,dh,dw,ph,pw);
+        raiz = new nodoabb(n,dh,dw,ph,pw,l);
     }
 }
 
-void abb::insertar(nodoabb *r, string n, int dh, int dw, int ph, int pw)
+void abb::insertar(nodoabb *r, string n, int dh, int dw, int ph, int pw, listacapas *l)
 {
     if(n < r->nombre)
     {
         if(r->ni != NULL)
         {
-            insertar(r->ni,n,dh,dw,ph,pw);
+            insertar(r->ni,n,dh,dw,ph,pw,l);
         } else
         {
             //Aqui va si es por la izquierda
-            r->ni = new nodoabb(n,dh,dw,ph,pw);
+            r->ni = new nodoabb(n,dh,dw,ph,pw,l);
         }
     } else
     {
         if(r->nd != NULL)
         {
-            insertar(r->nd,n,dh,dw,ph,pw);
+            insertar(r->nd,n,dh,dw,ph,pw,l);
         } else
         {
             //Aqui va si es por la derecha
-            r->nd = new nodoabb(n,dh,dw,ph,pw);
+            r->nd = new nodoabb(n,dh,dw,ph,pw,l);
         }
     }
 }

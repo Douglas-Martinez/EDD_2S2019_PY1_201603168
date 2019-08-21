@@ -16,8 +16,8 @@ class abb
         {
             raiz = NULL;
         }
-        void insertar(string n, int dh, int dw, int ph, int pw);
-        void insertar(nodoabb *r, string n, int dh, int dw, int ph, int pw);
+        void insertar(string n, int dh, int dw, int ph, int pw, listacapas *l);
+        void insertar(nodoabb *r, string n, int dh, int dw, int ph, int pw, listacapas *l);
         nodoabb* buscar(nodoabb *r, string n);
 
         void graficar();

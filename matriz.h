@@ -16,8 +16,8 @@ class matriz
 
         matriz(int z, std::string n);
         void insertar(int f, int c, int r, int g, int b);
-        void insertar(int f, int c);
         void poner(nodomatriz *n);
+        std::string rgb_h(int r, int g, int b);
         nodomatriz *buscar(int f, int c);
 
         void graficar(int n);

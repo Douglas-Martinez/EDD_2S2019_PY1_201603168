@@ -58,7 +58,7 @@ void listacapas::sobreponer()
             nodomatriz *auxM = auxF->der;
             while(auxM != NULL)
             {
-                nodomatriz *otronuevo = new nodomatriz(auxM->fila,auxM->columna,auxM->capa);
+                nodomatriz *otronuevo = new nodomatriz(auxM->fila,auxM->columna,auxM->capa,auxM->r,auxM->g,auxM->b);
                 todo->poner(otronuevo);
                 auxM = auxM->der;
             }
@@ -93,7 +93,7 @@ void listacapas::linealizar()
         for (int w = 0; w < x; w++)
         {
             int pos = q*x+w;
-            linealizada->insertar(new nodolineal(pos,q,w,"Nada"));
+            linealizada->insertar(new nodolineal(pos,q,w,"//"));
         }   
     }
     //Buscar y cambiar
@@ -104,7 +104,7 @@ void listacapas::linealizar()
         while(auxM != NULL)
         {
             int pos = (auxM->fila-1) * x + (auxM->columna)-1;
-            std::string color = "Pos: " + std::to_string(pos) + " (" + std::to_string(auxM->fila) + "," + std::to_string(auxM->columna) + ") Color: #AlgoHexadecimal";
+            string color = todo->rgb_h(auxM->r,auxM->g,auxM->b);
             nodolineal *bus = linealizada->buscar(pos);
             bus->colorH = color;
             auxM = auxM->der;

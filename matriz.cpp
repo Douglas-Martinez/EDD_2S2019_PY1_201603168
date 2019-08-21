@@ -8,7 +8,7 @@ matriz::matriz(int z, std::string n)
     columnas = new listacol();
 }
 
-void matriz::insertar(int f, int c)
+void matriz::insertar(int f, int c, int r, int g, int b)
 {
     /*
         yaExiste == 0 --> Significa que no existe
@@ -16,7 +16,7 @@ void matriz::insertar(int f, int c)
     */
     if(buscar(f,c) == 0)
     {
-        nodomatriz *nuevo = new nodomatriz(f,c,capa);
+        nodomatriz *nuevo = new nodomatriz(f,c,capa,r,g,b);
         nodofil *auxF = filas->buscar(f);
         nodocol *auxC = columnas->buscar(c);
         
@@ -82,6 +82,7 @@ void matriz::insertar(int f, int c)
                         auxM->abajo = nuevo;
                         break;
                     }
+                    auxM = auxM->abajo;
                 }
                 auxM->abajo = nuevo;
                 nuevo->arriba = auxM;
@@ -179,7 +180,7 @@ void matriz::generarCeldas(FILE **f)
     nodocol *auxC = columnas->inicio;
     while(auxC != NULL)
     {
-        fprintf((*f),"\"C%i\"[label=\"C%i\", style=\"solid\", pos=\"%i,0!\", shape=\"box\"];\r\n",auxC->col,auxC->col,(auxC->col));
+        fprintf((*f),"\"C%i\"[label=\"C%i\", style=\"solid\", pos=\"%i,0!\", shape=\"box\"];\r\n",auxC->col,auxC->col,auxC->col+auxC->col);
         auxC =auxC->sig;
     }
     auxC = columnas->inicio;
@@ -207,7 +208,7 @@ void matriz::generarCeldas(FILE **f)
             nodomatriz *auxM = auxF->der;
             while(auxM != NULL)
             {
-                fprintf((*f),"\"%p\"[label=\"(%i,%i),C:%i\", style=\"filled\", pos=\"%i,%i!\", shape=\"box\"];\r\n", auxM,auxM->fila,auxM->columna,auxM->capa,auxM->columna,(0-auxM->fila));
+                fprintf((*f),"\"%p\"[label=\"%s\", style=\"filled\", pos=\"%i,%i!\", shape=\"box\"];\r\n", auxM,rgb_h(auxM->r,auxM->g,auxM->b).c_str(),auxM->columna+auxM->columna,(0-auxM->fila));
                 auxM = auxM->der;
             }
             auxF = auxF->sig;
@@ -312,6 +313,7 @@ void matriz::poner(nodomatriz *n)
                         auxM->abajo = nuevo;
                         break;
                     }
+                    auxM = auxM->abajo;
                 }
                 auxM->abajo = nuevo;
                 nuevo->arriba = auxM;
@@ -321,4 +323,23 @@ void matriz::poner(nodomatriz *n)
     {
         b->capa = n->capa;
     }   
+}
+
+std::string matriz::rgb_h(int r, int g, int b)
+{
+    string res;
+
+    char rh[255];
+    sprintf(rh,"%.2X", r);
+    res.append(rh);
+
+    char gh[255];
+    sprintf(gh,"%.2X", g);
+    res.append(gh);
+
+    char bh[255];
+    sprintf(bh,"%.2X", b);
+    res.append(bh);
+
+    return "#" + res;
 }

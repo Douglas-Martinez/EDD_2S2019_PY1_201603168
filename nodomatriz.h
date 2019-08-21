@@ -16,24 +16,20 @@ class nodomatriz
         nodomatriz *abajo;
         nodomatriz *izq;
         nodomatriz *der;
-        //nodomatriz *frente;
-        //nodomatriz *atras;
 
-        nodomatriz(int f, int c, int z)
+        nodomatriz(int f, int c, int z, int red, int green, int blue)
         {
             fila = f;
             columna = c;
             capa = z;
-            //r = red;
-            //g = green;
-            //blue = b;
+            r = red;
+            g = green;
+            b = blue;
 
             arriba = NULL;
             abajo = NULL;
             izq = NULL;
             der = NULL;
-            //frente = NULL;
-            //atras = NULL;
         }
 };
 
