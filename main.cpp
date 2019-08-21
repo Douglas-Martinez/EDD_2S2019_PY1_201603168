@@ -11,17 +11,30 @@ using namespace std;
 
 void menu();
 void insert1();
+void select2();
 
 static abb *arbolBin = new abb();
+static nodoabb *selected;
 
 int main()
 {
     cout << "Proyecto No. 1 - 201603168\n" << endl;
 
-    menu();
-
+    //menu();
+    insert1();
+    insert1();
+    insert1();
+    select2();
+    selected->generar();
+    
     return 0;
 }
+
+/*
+Mario/Mario_Bros.csv
+R/R.csv
+Mario/Luigi_Rojo.csv
+*/
 
 void menu()
 {
@@ -42,10 +55,9 @@ void menu()
         if(op.compare("1") == 0)
         {
             insert1();
-            arbolBin->raiz->generar();
         } else if(op.compare("2") == 0)
         {
-            //metodo1
+            select2();
         } else if(op.compare("3") == 0)
         {
             //metodo1
@@ -186,9 +198,46 @@ void insert1()
         }
         arbolBin->insertar(nombrei,dh,dw,ph,pw,lista);
         cout << "Imagen ingresada\n" << endl;
+        archivo.close();
     } else
     {
         cout << "No se pudo abrir el archivo" << endl;
     }
-    archivo.close();
+}
+
+void select2()
+{
+    arbolBin->trasversalIN = new abblineal();
+    arbolBin->recorridoIN(arbolBin->raiz);
+    nodoabblineal *aux = arbolBin->trasversalIN->primero;
+    while(aux != NULL)
+    {
+        cout << aux->pos << ". " << aux->nombre << endl;
+        aux = aux->sig;
+    }
+    string op = "";
+    string name = "";
+    int si = 0;
+    do
+    {
+        cout << "Elige un numero de imagen ";
+        cin >> op;
+        aux = arbolBin->trasversalIN->primero;
+        while(aux != NULL)
+        {
+            if(op == to_string(aux->pos))
+            {
+                name = aux->nombre;
+                si = 1;
+                break;
+            }
+            aux = aux->sig;
+        }
+        if(si == 0)
+        {
+            cout << "Opcion incorrecta\n" << endl;
+        }
+    } while (si != 1);
+    selected = arbolBin->buscar(arbolBin->raiz,name);
+    cout << "Imagen seleccionada: " << name << endl;
 }

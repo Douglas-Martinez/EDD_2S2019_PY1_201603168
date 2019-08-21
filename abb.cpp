@@ -83,13 +83,13 @@ void abb::graficar()
         }
         fprintf(fichero,"label = \"Arbol ABB\";\r\n");
         fprintf(fichero,"}\r\n");
+        fclose(fichero);
+        system("dot -Tpng ./ABB.dot -o ./ABB.png");
+        system("eog ./ABB.png");
     } else
     {
         cout << "No se pudo abrir el archivo" << endl;
     }
-    fclose(fichero);
-    system("dot -Tpng ./ABB.dot -o ./ABB.png");
-    system("eog ./ABB.png");
 }
 
 void abb::nodo(nodoabb *r, FILE **f)
@@ -97,7 +97,6 @@ void abb::nodo(nodoabb *r, FILE **f)
     if(r != NULL)
     {
         fprintf((*f),"\"%p\"[label=\"%s\nDim:(%i,%i)\nPix:(%i,%i)\"];\r\n",r,r->nombre.c_str(),r->dimH,r->dimW,r->pixH,r->pixW);
-
     }
 }
 
@@ -118,13 +117,151 @@ void abb::link(nodoabb *r, FILE **f)
     }
 }
 
+void abb::grafIN()
+{
+    trasversalIN = new abblineal();
+    FILE *g = fopen("ArbolIN.dot","w+");
+    if(g)
+    {
+        fprintf(g,"digraph InOrden {\r\n");
+        fprintf(g,"node [shape=box]\r\n");
+        fprintf(g,"rankdir=\"LR\"\r\n");
+        if(raiz != NULL)
+        {
+            recorridoIN(raiz);
+            nodoabblineal *aux = trasversalIN->primero;
+            while(aux != NULL)
+            {
+                fprintf(g,"\"%p\"[label=\"%i - %s\"];\r\n",aux,aux->pos,aux->nombre.c_str());
+                aux = aux->sig;
+            }
+            aux = trasversalIN->primero;
+            if(aux->sig != NULL)
+            {
+                fprintf(g,"\"%p\"",aux);
+                aux = aux->sig;
+                while(aux != NULL)
+                {
+                    fprintf(g,"->\"%p\"",aux);
+                    aux = aux->sig;
+                }
+                fprintf(g,"\r\n");
+            }
+        } else 
+        {
+            fprintf(g,"\"Arbol Vacio;\"\r\n");
+        }
+        fprintf(g,"label = \"InOrden Traversal\";\r\n");
+        fprintf(g,"}");
+        fclose(g);
+        system("dot -Tpng ArbolIN.dot -o ArbolIN.png");
+        system("eog ArbolIN.png");
+    } else
+    {
+        cout << "No se pudo crear el archivo" << endl;
+    }
+}
+
+void abb::grafPRE()
+{
+    trasversalPRE = new abblineal();
+    FILE *g = fopen("ArbolPRE.dot","w+");
+    if(g)
+    {
+        fprintf(g,"digraph PreOrden {\r\n");
+        fprintf(g,"node [shape=box]\r\n");
+        fprintf(g,"rankdir=\"LR\"\r\n");
+        if(raiz != NULL)
+        {
+            recorridoPRE(raiz);
+            nodoabblineal *aux = trasversalPRE->primero;
+            while(aux != NULL)
+            {
+                fprintf(g,"\"%p\"[label=\"%i - %s\"];\r\n",aux,aux->pos,aux->nombre.c_str());
+                aux = aux->sig;
+            }
+            aux = trasversalPRE->primero;
+            if(aux->sig != NULL)
+            {
+                fprintf(g,"\"%p\"",aux);
+                aux = aux->sig;
+                while(aux != NULL)
+                {
+                    fprintf(g,"->\"%p\"",aux);
+                    aux = aux->sig;
+                }
+                fprintf(g,"\r\n");
+            }
+        } else 
+        {
+            fprintf(g,"\"Arbol Vacio;\"\r\n");
+        }
+        fprintf(g,"label = \"PreOrden Traversal\";\r\n");
+        fprintf(g,"}");
+        fclose(g);
+        system("dot -Tpng ArbolPRE.dot -o ArbolPRE.png");
+        system("eog ArbolPRE.png");
+    } else
+    {
+        cout << "No se pudo crear el archivo" << endl;
+    }
+}
+
+void abb::grafPOST()
+{
+    trasversalPOST = new abblineal();
+    FILE *g = fopen("ArbolPOST.dot","w+");
+    if(g)
+    {
+        fprintf(g,"digraph PostOrden {\r\n");
+        fprintf(g,"node [shape=box]\r\n");
+        fprintf(g,"rankdir=\"LR\"\r\n");
+        if(raiz != NULL)
+        {
+            recorridoPOST(raiz);
+            nodoabblineal *aux = trasversalPOST->primero;
+            while(aux != NULL)
+            {
+                fprintf(g,"\"%p\"[label=\"%i - %s\"];\r\n",aux,aux->pos,aux->nombre.c_str());
+                aux = aux->sig;
+            }
+            aux = trasversalPOST->primero;
+            if(aux->sig != NULL)
+            {
+                fprintf(g,"\"%p\"",aux);
+                aux = aux->sig;
+                while(aux != NULL)
+                {
+                    fprintf(g,"->\"%p\"",aux);
+                    aux = aux->sig;
+                }
+                fprintf(g,"\r\n");
+            }
+        } else 
+        {
+            fprintf(g,"\"Arbol Vacio;\"\r\n");
+        }
+        fprintf(g,"label = \"PostOrden Traversal\";\r\n");
+        fprintf(g,"}");
+        fclose(g);
+        system("dot -Tpng ArbolPOST.dot -o ArbolPOST.png");
+        system("eog ArbolPOST.png");
+    } else
+    {
+        cout << "No se pudo crear el archivo" << endl;
+    }
+}
 
 void abb::recorridoIN(nodoabb *r)
 {
     if(r != NULL)
     {
         recorridoIN(r->ni);
-        cout << r->nombre << " -> ";
+
+        nodoabblineal *nuevo = new nodoabblineal();
+        nuevo->nombre = r->nombre;
+        trasversalIN->insertar(nuevo);
+        
         recorridoIN(r->nd);
     }
 }
@@ -133,7 +270,10 @@ void abb::recorridoPRE(nodoabb* r)
 {
     if(r != NULL)
     {
-        cout << r->nombre << " -> ";
+        nodoabblineal *nuevo = new nodoabblineal();
+        nuevo->nombre = r->nombre;
+        trasversalPRE->insertar(nuevo);
+
         recorridoPRE(r->ni);
         recorridoPRE(r->nd);
     }
@@ -145,6 +285,9 @@ void abb::recorridoPOST(nodoabb* r)
     {
         recorridoPOST(r->ni);
         recorridoPOST(r->nd);
-        cout << r->nombre << " -> ";
+
+        nodoabblineal *nuevo = new nodoabblineal();
+        nuevo->nombre = r->nombre;
+        trasversalPOST->insertar(nuevo);
     }
 }
