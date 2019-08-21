@@ -37,8 +37,8 @@ nodolineal* listalineal::buscar(int p)
 
 void listalineal::graficar()
 {
-    std::string rut = nombre + "L.dot";
-    std::string img = nombre + "L.png";
+    std::string rut = "Exports/" + nombre + "/" + nombre + "_L.dot";
+    std::string img = "Exports/" + nombre + "/" + nombre + "_L.png";
     std::string com = "dot -Tpng " + rut + " -o " + img;
     std::string dis = "eog " + img;
     
@@ -72,6 +72,6 @@ void listalineal::graficar()
         fprintf(f,"}");
         fclose(f);
         system(com.c_str());
-        system(dis.c_str());
+        //system(dis.c_str());
     }
 }

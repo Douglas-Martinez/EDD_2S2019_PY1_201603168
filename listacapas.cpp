@@ -42,7 +42,7 @@ void listacapas::graficar_capas()
     nodolistacapa *aux = inicio;
     while(aux != NULL)
     {
-        aux->capa->graficar(0);
+        aux->capa->graficar(0,todo->nombre);
         aux = aux->sig;
     }
 }
@@ -87,6 +87,8 @@ void listacapas::linealizar()
         x = auxC->col;
         auxC = auxC->sig;
     }
+    linealizada->totF = y;
+    linealizada->totC = x;
     //lineal por filas = i*columnas + j
     for (int q = 0; q < y; q++)
     {

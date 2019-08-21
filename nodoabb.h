@@ -15,20 +15,13 @@ class nodoabb
         int dimW;
         int pixH;
         int pixW;
+        int totFil;
+        int totCol;
         listacapas *listaC;
         nodoabb *ni, *nd;
 
-        nodoabb(string n, int dh, int dw, int ph, int pw, listacapas *l)
-        {
-            nombre = n;
-            dimH = dh;
-            dimW = dw;
-            pixH = ph;
-            pixW = pw;
-            listaC = l;
-            ni = NULL;
-            nd = NULL;
-        }
+        nodoabb(string n, int dh, int dw, int ph, int pw, listacapas *l);
+        void generar();
 };
 
 #endif // NODOABB_H

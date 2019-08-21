@@ -20,7 +20,7 @@ class matriz
         std::string rgb_h(int r, int g, int b);
         nodomatriz *buscar(int f, int c);
 
-        void graficar(int n);
+        void graficar(int n,std::string car);
         void generarCeldas(FILE **f);
 };
 

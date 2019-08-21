@@ -1,7 +1,7 @@
 #ifndef ABB_H
 #define ABB_H
 
-#include "nodoabb.h"
+#include "nodoabb.cpp"
 
 #include <string>
 

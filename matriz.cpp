@@ -116,18 +116,18 @@ nodomatriz* matriz::buscar(int f, int c)
     return NULL;
 }
 
-void matriz::graficar(int n)
+void matriz::graficar(int n,std::string car)
 {
     std::string rut;
     std::string img;
     if(n == -1)
     {
-        rut = nombre + ".dot";
-        img = nombre + ".png";
+        rut = "Exports/" + nombre + "/" + nombre + ".dot";
+        img = "Exports/" + nombre + "/" + nombre + ".png";
     } else 
     {
-        rut = "Capa_" + nombre + ".dot";
-        img = "Capa_" + nombre + ".png";
+        rut = "Exports/" + car + "/Capa_" + nombre + ".dot";
+        img = "Exports/" + car + "/Capa_" + nombre + ".png";
     }
     std::string com = "neato -Tpng " + rut + " -o " + img;
     std::string dis = "eog " + img;
@@ -147,7 +147,7 @@ void matriz::graficar(int n)
         fprintf(f,"}");
         fclose(f);
         system(com.c_str());
-        system(dis.c_str());
+        //system(dis.c_str());
     }
 }
 
@@ -322,6 +322,9 @@ void matriz::poner(nodomatriz *n)
     } else
     {
         b->capa = n->capa;
+        b->r = n->r;
+        b->g = n->g;
+        b->b = n->b;
     }   
 }
 

@@ -3,7 +3,6 @@
 #include <string>
 #include <sstream>
 
-
 #include "Clases/abb.cpp"
 #include "Clases/matriz.cpp"
 #include "Clases/listacapas.cpp"
@@ -17,38 +16,10 @@ static abb *arbolBin = new abb();
 
 int main()
 {
-    //cout << "Proyecto No. 1 - 201603168\n" << endl;
-    //abb *aABB = new abb();
-    //aABB->graficar();
-    /*
-    matriz *matrix = new matriz(1,"Uno1");
-    matrix->insertar(2,3);
-    matrix->insertar(2,1);
-    matrix->insertar(5,6);
+    cout << "Proyecto No. 1 - 201603168\n" << endl;
 
-    matriz *matrix2 = new matriz(2,"Dos2");
-    matrix2->insertar(1,2);
-    matrix2->insertar(3,1);
-    matrix2->insertar(4,4);
-    matrix2->insertar(2,1);
+    menu();
 
-    listacapas *lista1 = new listacapas("Mario");
-    lista1->insertar(new nodolistacapa(matrix2->capa,matrix2->nombre,matrix2));
-    lista1->insertar(new nodolistacapa(matrix->capa,matrix->nombre,matrix));
-    //lista1->graficar_capas();
-    //lista1->sobreponer();
-    //lista1->todo->graficar(lista1->todo->capa);
-    lista1->linealizar();
-    //lista1->todo->graficar(-1);
-    lista1->linealizada->graficar();
-    */
-    //menu();
-    insert1();
-    //arbolBin->raiz->listaC->graficar_capas();
-    //arbolBin->raiz->listaC->sobreponer();
-    arbolBin->raiz->listaC->linealizar();
-    arbolBin->raiz->listaC->todo->graficar(arbolBin->raiz->listaC->todo->capa);
-    arbolBin->raiz->listaC->linealizada->graficar();
     return 0;
 }
 
@@ -71,6 +42,7 @@ void menu()
         if(op.compare("1") == 0)
         {
             insert1();
+            arbolBin->raiz->generar();
         } else if(op.compare("2") == 0)
         {
             //metodo1
@@ -99,12 +71,12 @@ void menu()
 
 void insert1()
 {
-    string init = "R/R.csv";
-    //cout << "Ingresa la direccion de tu archivo inicial" << endl;
-    //cin >> init;
+    string init = "";
+    cout << "Ingresa la direccion de tu archivo inicial" << endl;
+    cin >> init;
 
     ifstream archivo;
-    archivo.open("R/R.csv",ios::in);
+    archivo.open(init,ios::in);
     if(!archivo.fail())
     {
         string texto;
@@ -213,7 +185,7 @@ void insert1()
             con ++;
         }
         arbolBin->insertar(nombrei,dh,dw,ph,pw,lista);
-        cout << "Imagen ingresada" << endl;
+        cout << "Imagen ingresada\n" << endl;
     } else
     {
         cout << "No se pudo abrir el archivo" << endl;

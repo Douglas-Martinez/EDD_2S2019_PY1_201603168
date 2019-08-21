@@ -9,6 +9,8 @@ class listalineal
         nodolineal *primero;
         nodolineal *ultimo;
         std::string nombre;
+        int totF;
+        int totC;
 
         listalineal();
         void insertar(nodolineal *nuevo);
