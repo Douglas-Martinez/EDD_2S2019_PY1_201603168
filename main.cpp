@@ -6,6 +6,7 @@
 #include "Clases/abb.cpp"
 #include "Clases/matriz.cpp"
 #include "Clases/listacapas.cpp"
+#include "Clases/listacircular.cpp"
 
 using namespace std;
 
@@ -15,26 +16,33 @@ void select2();
 
 static abb *arbolBin = new abb();
 static nodoabb *selected;
+static listacircular *filtros = new listacircular();
 
 int main()
 {
     cout << "Proyecto No. 1 - 201603168\n" << endl;
-
     //menu();
-    insert1();
-    insert1();
-    insert1();
-    select2();
-    selected->generar();
-    
+    nodocircular *n1 = new nodocircular();
+    n1->filtro = "Mosaico";
+    nodocircular *n2 = new nodocircular();
+    n2->filtro = "Negativo";
+    nodocircular *n3 = new nodocircular();
+    n3->filtro = "X-Mirror";
+    nodocircular *n4 = new nodocircular();
+    n4->filtro = "Y-Mirror";
+    nodocircular *n5 = new nodocircular();
+    n5->filtro = "Double-Mirror";
+    nodocircular *n6 = new nodocircular();
+    n6->filtro = "Collage";
+    filtros->insertar(n1);
+    filtros->insertar(n2);
+    filtros->insertar(n3);
+    filtros->insertar(n4);
+    filtros->insertar(n5);
+    filtros->insertar(n6);
+    filtros->graficar();
     return 0;
 }
-
-/*
-Mario/Mario_Bros.csv
-R/R.csv
-Mario/Luigi_Rojo.csv
-*/
 
 void menu()
 {
@@ -58,6 +66,7 @@ void menu()
         } else if(op.compare("2") == 0)
         {
             select2();
+            filtros = new listacircular();
         } else if(op.compare("3") == 0)
         {
             //metodo1
@@ -170,7 +179,7 @@ void insert1()
                         string c;
                         while(getline(sss,c,','))
                         {
-                            if((c != "x") && (c != "X"))
+                            if((c != "x") && (c != "X") && (c != ""))
                             {
                                 string r;
                                 string g;
