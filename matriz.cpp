@@ -1,5 +1,7 @@
 #include "matriz.h"
 
+#include <cmath>
+
 matriz::matriz(int z, std::string n)
 {
     capa = z;
@@ -122,12 +124,12 @@ void matriz::graficar(int n,std::string car)
     std::string img;
     if(n == -1)
     {
-        rut = "Exports/" + nombre + "/" + nombre + ".dot";
-        img = "Exports/" + nombre + "/" + nombre + ".png";
+        rut = nombre + ".dot";
+        img = nombre + ".png";
     } else 
     {
-        rut = "Exports/" + car + "/Capa_" + nombre + ".dot";
-        img = "Exports/" + car + "/Capa_" + nombre + ".png";
+        rut = "Capa_" + nombre + ".dot";
+        img = "Capa_" + nombre + ".png";
     }
     std::string com = "neato -Tpng " + rut + " -o " + img;
     std::string dis = "eog " + img;
@@ -330,7 +332,7 @@ void matriz::poner(nodomatriz *n)
 
 std::string matriz::rgb_h(int r, int g, int b)
 {
-    string res;
+    std::string res;
 
     char rh[255];
     sprintf(rh,"%.2X", r);
@@ -345,4 +347,110 @@ std::string matriz::rgb_h(int r, int g, int b)
     res.append(bh);
 
     return "#" + res;
+}
+
+void matriz::filNegativo()
+{
+    nodofil *auxF = filas->inicio;
+    while(auxF != NULL)
+    {
+        nodomatriz *auxM = auxF->der;
+        while(auxM != NULL)
+        {
+            auxM->r = 255 - auxM->r;
+            auxM->g = 255 - auxM->g;
+            auxM->b = 255 - auxM->b;
+            auxM = auxM->der;
+        }
+        auxF = auxF->sig;
+    }
+}
+
+void matriz::filGris()
+{
+    nodofil *auxF = filas->inicio;
+    while(auxF != NULL)
+    {
+        nodomatriz *auxM = auxF->der;
+        while(auxM != NULL)
+        {
+            float g = auxM->r*0.2125 + auxM->g*0.7154 + auxM->b*0.0721;
+            int gs = round(g);
+            auxM->r = gs;
+            auxM->g = gs;
+            auxM->b = gs;
+            auxM = auxM->der;
+        }
+        auxF = auxF->sig;
+    }
+}
+
+void matriz::filMX(int nc)
+{
+    matriz *mx = new matriz(capa,nombre);
+    nodofil *auxF = filas->inicio;
+    nodocol *auxC = columnas->inicio;
+    
+    int c = nc;
+    while(auxF != NULL)
+    {
+        nodomatriz *auxM = auxF->der;
+        while(auxM != NULL)
+        {
+            mx->insertar(auxM->fila,(c-(auxM->columna-1)),auxM->r,auxM->g,auxM->b);
+            auxM = auxM->der;
+        }
+        auxF = auxF->sig;
+    }
+    filas = NULL;
+    columnas = NULL;
+    filas = mx->filas;
+    columnas = mx->columnas;
+}
+
+void matriz::filMY(int nf)
+{
+    matriz *mx = new matriz(capa,nombre);
+    nodofil *auxF = filas->inicio;
+    nodocol *auxC = columnas->inicio;
+    
+    int f = nf;
+    while(auxF != NULL)
+    {
+        nodomatriz *auxM = auxF->der;
+        while(auxM != NULL)
+        {
+            mx->insertar(f-(auxM->fila-1),auxM->columna,auxM->r,auxM->g,auxM->b);
+            auxM = auxM->der;
+        }
+        auxF = auxF->sig;
+    }
+    filas = NULL;
+    columnas = NULL;
+    filas = mx->filas;
+    columnas = mx->columnas;
+}
+
+void matriz::filMXY(int nf, int nc)
+{
+    matriz *mx = new matriz(capa,nombre);
+    nodofil *auxF = filas->inicio;
+    nodocol *auxC = columnas->inicio;
+    
+    int f = nf;
+    int c = nc;
+    while(auxF != NULL)
+    {
+        nodomatriz *auxM = auxF->der;
+        while(auxM != NULL)
+        {
+            mx->insertar(f-(auxM->fila-1),(c-(auxM->columna-1)),auxM->r,auxM->g,auxM->b);
+            auxM = auxM->der;
+        }
+        auxF = auxF->sig;
+    }
+    filas = NULL;
+    columnas = NULL;
+    filas = mx->filas;
+    columnas = mx->columnas;
 }

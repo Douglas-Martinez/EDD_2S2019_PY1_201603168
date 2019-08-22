@@ -13,34 +13,17 @@ using namespace std;
 void menu();
 void insert1();
 void select2();
+void filters3();
+int select();
 
 static abb *arbolBin = new abb();
-static nodoabb *selected;
+static nodoabb *selected = NULL;
 static listacircular *filtros = new listacircular();
 
 int main()
 {
     cout << "Proyecto No. 1 - 201603168\n" << endl;
-    //menu();
-    nodocircular *n1 = new nodocircular();
-    n1->filtro = "Mosaico";
-    nodocircular *n2 = new nodocircular();
-    n2->filtro = "Negativo";
-    nodocircular *n3 = new nodocircular();
-    n3->filtro = "X-Mirror";
-    nodocircular *n4 = new nodocircular();
-    n4->filtro = "Y-Mirror";
-    nodocircular *n5 = new nodocircular();
-    n5->filtro = "Double-Mirror";
-    nodocircular *n6 = new nodocircular();
-    n6->filtro = "Collage";
-    filtros->insertar(n1);
-    filtros->insertar(n2);
-    filtros->insertar(n3);
-    filtros->insertar(n4);
-    filtros->insertar(n5);
-    filtros->insertar(n6);
-    filtros->graficar();
+    menu();
     return 0;
 }
 
@@ -65,16 +48,37 @@ void menu()
             insert1();
         } else if(op.compare("2") == 0)
         {
-            select2();
-            filtros = new listacircular();
+            if(arbolBin->raiz == NULL)
+            {
+                cout << "No hay imagenes importadas para poder seleccionar" << endl;
+            } else 
+            {
+                select2();
+                selected->generar();
+                filtros = new listacircular();
+            }
         } else if(op.compare("3") == 0)
         {
-            //metodo1
+            if(selected == NULL)
+            {
+                cout << "No hay una imagen seleccionada para poder continuar" << endl;
+            } else
+            {
+                filters3();
+            }
         } else if(op.compare("4") == 0)
         {
+            if(selected == NULL)
+            {
+                cout << "No hay una imagen seleccionada para poder continuar" << endl;
+            }
             //metodo1
         } else if(op.compare("5") == 0)
         {
+            if(selected == NULL)
+            {
+                cout << "No hay una imagen seleccionada para poder continuar" << endl;
+            }
             //metodo1
         } else if(op.compare("6") == 0)
         {
@@ -92,6 +96,7 @@ void menu()
 
 void insert1()
 {
+    cout << "========== IMAGEN ==========" << endl;
     string init = "";
     cout << "Ingresa la direccion de tu archivo inicial" << endl;
     cin >> init;
@@ -216,6 +221,7 @@ void insert1()
 
 void select2()
 {
+    cout << "========== SELECCION ==========" << endl;   
     arbolBin->trasversalIN = new abblineal();
     arbolBin->recorridoIN(arbolBin->raiz);
     nodoabblineal *aux = arbolBin->trasversalIN->primero;
@@ -229,7 +235,7 @@ void select2()
     int si = 0;
     do
     {
-        cout << "Elige un numero de imagen ";
+        cout << "Elige un numero de imagen: ";
         cin >> op;
         aux = arbolBin->trasversalIN->primero;
         while(aux != NULL)
@@ -249,4 +255,539 @@ void select2()
     } while (si != 1);
     selected = arbolBin->buscar(arbolBin->raiz,name);
     cout << "Imagen seleccionada: " << name << endl;
+    cout << endl;
+}
+
+void filters3()
+{
+    string op = "";
+    do
+    {
+        cout << "========== FILTROS ==========" << endl;
+        cout << "1. Negative" << endl;
+        cout << "2. Grayscale" << endl;
+        cout << "3. Mirror" << endl;
+        cout << "4. Collage!" << endl;
+        cout << "5. Mosaic!" << endl;
+        cin >> op;
+        cout << endl;
+
+        if(op == "1")
+        {
+            //N
+            nodocircular *nuevo = new nodocircular();
+            nuevo->filtro = "Negativo";
+            nuevo->capa = selected->nombre;
+            listacapas *nlist = new listacapas(selected->nombre);
+
+            //Nueva Lista de Capas
+            nodolistacapa *auxl = selected->listaC->inicio;
+            while(auxl != NULL)
+            {
+                //Nueva Matriz
+                matriz *nuevamatriz = new matriz(auxl->capa->capa,auxl->capa->nombre);
+                
+                nodofil *auxF = auxl->capa->filas->inicio;
+                while (auxF != NULL)
+                {
+                    nodomatriz *auxM = auxF->der;
+                    while (auxM != NULL)
+                    {
+                        nuevamatriz->insertar(auxM->fila,auxM->columna,auxM->r,auxM->g,auxM->b);
+                        auxM = auxM->der;
+                    }
+                    auxF = auxF->sig;
+                }
+                //Nuevo nodo de capa
+                nodolistacapa *nuevonodocapa = new nodolistacapa(auxl->id,auxl->nombre,nuevamatriz);
+                //Inserto el nuevo nodo a la listanueva
+                nlist->insertar(nuevonodocapa);
+                auxl = auxl->sig;
+            }
+            
+            int tipo = select();
+            if(tipo == 1)
+            {
+                nodolistacapa *auxLC = nlist->inicio;
+                while(auxLC != NULL)
+                {
+                    auxLC->capa->filNegativo();
+                    auxLC = auxLC->sig;
+                }
+                nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("Negativo_Completo_" + selected->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+                nodoabbcopiadoparalalistadefiltros->generar();
+                nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+            } else
+            {
+                int si = 0;
+                matriz *sel;
+                do
+                {   
+                    nodolistacapa *auxLC = nlist->inicio;
+                    cout << "----- CAPAS -----" << endl;
+                    string opc = "";
+                    while(auxLC != NULL)
+                    {
+                        cout << auxLC->id << ". " << auxLC->nombre << endl;
+                        auxLC = auxLC->sig;
+                    }
+                    cout << "Selecciona el numero de una capa: ";
+                    cin >> opc;
+                    cout << endl;
+                    auxLC = nlist->inicio;
+                    while(auxLC != NULL)
+                    {
+                        if(to_string(auxLC->id) == opc)
+                        {
+                            sel = auxLC->capa;
+                            sel->filNegativo();
+                            si = 1;
+                            break;
+                        }
+                        auxLC = auxLC->sig;
+                    }
+                    if(si == 0)
+                    {
+                        cout << "La numero de capa elegida no coincide con alguna de las capas listadas previamente\n" << endl;
+                    }
+                } while (si != 1);
+                nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("Negativo_Capa_" + sel->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+                nodoabbcopiadoparalalistadefiltros->generar();
+                nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+            }
+            //nodoabbcopiadoparalalistadefiltros->generar();
+            //nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+            filtros->insertar(nuevo);
+        } else if(op == "2")
+        {
+            //N
+            nodocircular *nuevo = new nodocircular();
+            nuevo->filtro = "GrayScale";
+            nuevo->capa = selected->nombre;
+            listacapas *nlist = new listacapas(selected->nombre);
+
+            //Nueva Lista de Capas
+            nodolistacapa *auxl = selected->listaC->inicio;
+            while(auxl != NULL)
+            {
+                //Nueva Matriz
+                matriz *nuevamatriz = new matriz(auxl->capa->capa,auxl->capa->nombre);
+                
+                nodofil *auxF = auxl->capa->filas->inicio;
+                while (auxF != NULL)
+                {
+                    nodomatriz *auxM = auxF->der;
+                    while (auxM != NULL)
+                    {
+                        nuevamatriz->insertar(auxM->fila,auxM->columna,auxM->r,auxM->g,auxM->b);
+                        auxM = auxM->der;
+                    }
+                    auxF = auxF->sig;
+                }
+                //Nuevo nodo de capa
+                nodolistacapa *nuevonodocapa = new nodolistacapa(auxl->id,auxl->nombre,nuevamatriz);
+                //Inserto el nuevo nodo a la listanueva
+                nlist->insertar(nuevonodocapa);
+                auxl = auxl->sig;
+            }
+            
+            int tipo = select();
+            if(tipo == 1)
+            {
+                nodolistacapa *auxLC = nlist->inicio;
+                while(auxLC != NULL)
+                {
+                    auxLC->capa->filGris();
+                    auxLC = auxLC->sig;
+                }
+                nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("GrayScale_Completo_" + selected->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+                nodoabbcopiadoparalalistadefiltros->generar();
+                nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+            } else
+            {
+                int si = 0;
+                matriz *sel;
+                do
+                {   
+                    nodolistacapa *auxLC = nlist->inicio;
+                    cout << "----- CAPAS -----" << endl;
+                    string opc = "";
+                    while(auxLC != NULL)
+                    {
+                        cout << auxLC->id << ". " << auxLC->nombre << endl;
+                        auxLC = auxLC->sig;
+                    }
+                    cout << "Selecciona el numero de una capa: ";
+                    cin >> opc;
+                    cout << endl;
+                    auxLC = nlist->inicio;
+                    while(auxLC != NULL)
+                    {
+                        if(to_string(auxLC->id) == opc)
+                        {
+                            sel = auxLC->capa;
+                            sel->filGris();
+                            si = 1;
+                            break;
+                        }
+                        auxLC = auxLC->sig;
+                    }
+                    if(si == 0)
+                    {
+                        cout << "La numero de capa elegida no coincide con alguna de las capas listadas previamente\n" << endl;
+                    }
+                } while (si != 1);
+                nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("GrayScale_Capa_" + sel->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+                nodoabbcopiadoparalalistadefiltros->generar();
+                nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+            }
+            //nodoabbcopiadoparalalistadefiltros->generar();
+            //nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+            filtros->insertar(nuevo);
+        } else if(op == "3")
+        {
+            int si2 = 0;
+            string op2 = "";
+            do
+            {
+                cout << "========== ESPEJO ==========" << endl;
+                cout << "1. X-Mirror" << endl;
+                cout << "2. Y-Mirror" << endl;
+                cout << "3. Double Mirror" << endl;
+                cin >> op2;
+                cout << endl;
+                if(op2 == "1")
+                {
+                    //N
+                    nodocircular *nuevo = new nodocircular();
+                    nuevo->filtro = "EspejoX";
+                    nuevo->capa = selected->nombre;
+                    listacapas *nlist = new listacapas(selected->nombre);
+
+                    //Nueva Lista de Capas
+                    nodolistacapa *auxl = selected->listaC->inicio;
+                    while(auxl != NULL)
+                    {
+                        //Nueva Matriz
+                        matriz *nuevamatriz = new matriz(auxl->capa->capa,auxl->capa->nombre);
+                        
+                        nodofil *auxF = auxl->capa->filas->inicio;
+                        while (auxF != NULL)
+                        {
+                            nodomatriz *auxM = auxF->der;
+                            while (auxM != NULL)
+                            {
+                                nuevamatriz->insertar(auxM->fila,auxM->columna,auxM->r,auxM->g,auxM->b);
+                                auxM = auxM->der;
+                            }
+                            auxF = auxF->sig;
+                        }
+                        //Nuevo nodo de capa
+                        nodolistacapa *nuevonodocapa = new nodolistacapa(auxl->id,auxl->nombre,nuevamatriz);
+                        //Inserto el nuevo nodo a la listanueva
+                        nlist->insertar(nuevonodocapa);
+                        auxl = auxl->sig;
+                    }
+
+                    int nc = 0;
+                    nodocol *aac = selected->listaC->todo->columnas->inicio;
+                    while(aac != NULL)
+                    {
+                        nc = aac->col;
+                        aac = aac->sig;
+                    }
+
+                    int tipo = select();
+                    if(tipo == 1)
+                    {
+                        nodolistacapa *auxLC = nlist->inicio;
+                        while(auxLC != NULL)
+                        {
+                            auxLC->capa->filMX(nc);
+                            auxLC = auxLC->sig;
+                        }
+                        nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("EspejoX_Completo_" + selected->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+                        nodoabbcopiadoparalalistadefiltros->generar();
+                        nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+                    } else
+                    {
+                        int si = 0;
+                        matriz *sel;
+                        do
+                        {   
+                            nodolistacapa *auxLC = nlist->inicio;
+                            cout << "----- CAPAS -----" << endl;
+                            string opc = "";
+                            while(auxLC != NULL)
+                            {
+                                cout << auxLC->id << ". " << auxLC->nombre << endl;
+                                auxLC = auxLC->sig;
+                            }
+                            cout << "Selecciona el numero de una capa: ";
+                            cin >> opc;
+                            cout << endl;
+                            auxLC = nlist->inicio;
+                            while(auxLC != NULL)
+                            {
+                                if(to_string(auxLC->id) == opc)
+                                {
+                                    sel = auxLC->capa;
+                                    sel->filMX(nc);
+                                    si = 1;
+                                    break;
+                                }
+                                auxLC = auxLC->sig;
+                            }
+                            if(si == 0)
+                            {
+                                cout << "La numero de capa elegida no coincide con alguna de las capas listadas previamente\n" << endl;
+                            }
+                        } while (si != 1);
+                        nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("EspejoX_Capa_" + sel->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+                        nodoabbcopiadoparalalistadefiltros->generar();
+                        nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+                    }
+
+                    //nodoabbcopiadoparalalistadefiltros->generar();
+                    //nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+                    filtros->insertar(nuevo);
+                } else if(op2 == "2")
+                {
+                    //N
+                    nodocircular *nuevo = new nodocircular();
+                    nuevo->filtro = "EspejoX";
+                    nuevo->capa = selected->nombre;
+                    listacapas *nlist = new listacapas(selected->nombre);
+
+                    //Nueva Lista de Capas
+                    nodolistacapa *auxl = selected->listaC->inicio;
+                    while(auxl != NULL)
+                    {
+                        //Nueva Matriz
+                        matriz *nuevamatriz = new matriz(auxl->capa->capa,auxl->capa->nombre);
+                        
+                        nodofil *auxF = auxl->capa->filas->inicio;
+                        while (auxF != NULL)
+                        {
+                            nodomatriz *auxM = auxF->der;
+                            while (auxM != NULL)
+                            {
+                                nuevamatriz->insertar(auxM->fila,auxM->columna,auxM->r,auxM->g,auxM->b);
+                                auxM = auxM->der;
+                            }
+                            auxF = auxF->sig;
+                        }
+                        //Nuevo nodo de capa
+                        nodolistacapa *nuevonodocapa = new nodolistacapa(auxl->id,auxl->nombre,nuevamatriz);
+                        //Inserto el nuevo nodo a la listanueva
+                        nlist->insertar(nuevonodocapa);
+                        auxl = auxl->sig;
+                    }
+
+                    int nf = 0;
+                    nodofil *aaf = selected->listaC->todo->filas->inicio;
+                    while(aaf != NULL)
+                    {
+                        nf = aaf->fil;
+                        aaf = aaf->sig;
+                    }
+
+                    int tipo = select();
+                    if(tipo == 1)
+                    {
+                        nodolistacapa *auxLC = nlist->inicio;
+                        while(auxLC != NULL)
+                        {
+                            auxLC->capa->filMY(nf);
+                            auxLC = auxLC->sig;
+                        }
+                        nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("EspejoY_Completo_" + selected->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+                        nodoabbcopiadoparalalistadefiltros->generar();
+                        nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+                    } else
+                    {
+                        int si = 0;
+                        matriz *sel;
+                        do
+                        {   
+                            nodolistacapa *auxLC = nlist->inicio;
+                            cout << "----- CAPAS -----" << endl;
+                            string opc = "";
+                            while(auxLC != NULL)
+                            {
+                                cout << auxLC->id << ". " << auxLC->nombre << endl;
+                                auxLC = auxLC->sig;
+                            }
+                            cout << "Selecciona el numero de una capa: ";
+                            cin >> opc;
+                            cout << endl;
+                            auxLC = nlist->inicio;
+                            while(auxLC != NULL)
+                            {
+                                if(to_string(auxLC->id) == opc)
+                                {
+                                    sel = auxLC->capa;
+                                    sel->filMY(nf);
+                                    si = 1;
+                                    break;
+                                }
+                                auxLC = auxLC->sig;
+                            }
+                            if(si == 0)
+                            {
+                                cout << "La numero de capa elegida no coincide con alguna de las capas listadas previamente\n" << endl;
+                            }
+                        } while (si != 1);
+                        nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("EspejoY_Capa_" + sel->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+                        nodoabbcopiadoparalalistadefiltros->generar();
+                        nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+                    }
+
+                    //nodoabbcopiadoparalalistadefiltros->generar();
+                    //nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+                    filtros->insertar(nuevo);
+                } else if(op2 == "3")
+                {
+                    //N
+                    nodocircular *nuevo = new nodocircular();
+                    nuevo->filtro = "EspejoX";
+                    nuevo->capa = selected->nombre;
+                    listacapas *nlist = new listacapas(selected->nombre);
+
+                    //Nueva Lista de Capas
+                    nodolistacapa *auxl = selected->listaC->inicio;
+                    while(auxl != NULL)
+                    {
+                        //Nueva Matriz
+                        matriz *nuevamatriz = new matriz(auxl->capa->capa,auxl->capa->nombre);
+                        
+                        nodofil *auxF = auxl->capa->filas->inicio;
+                        while (auxF != NULL)
+                        {
+                            nodomatriz *auxM = auxF->der;
+                            while (auxM != NULL)
+                            {
+                                nuevamatriz->insertar(auxM->fila,auxM->columna,auxM->r,auxM->g,auxM->b);
+                                auxM = auxM->der;
+                            }
+                            auxF = auxF->sig;
+                        }
+                        //Nuevo nodo de capa
+                        nodolistacapa *nuevonodocapa = new nodolistacapa(auxl->id,auxl->nombre,nuevamatriz);
+                        //Inserto el nuevo nodo a la listanueva
+                        nlist->insertar(nuevonodocapa);
+                        auxl = auxl->sig;
+                    }
+
+                    int nf = 0;
+                    nodofil *aaf = selected->listaC->todo->filas->inicio;
+                    while(aaf != NULL)
+                    {
+                        nf = aaf->fil;
+                        aaf = aaf->sig;
+                    }
+                    int nc = 0;
+                    nodocol *aac = selected->listaC->todo->columnas->inicio;
+                    while(aac != NULL)
+                    {
+                        nc = aac->col;
+                        aac = aac->sig;
+                    }
+                    int tipo = select();
+                    if(tipo == 1)
+                    {
+                        nodolistacapa *auxLC = nlist->inicio;
+                        while(auxLC != NULL)
+                        {
+                            auxLC->capa->filMXY(nf,nc);
+                            auxLC = auxLC->sig;
+                        }
+                        nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("DobleEspejo_Completo_" + selected->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+                        nodoabbcopiadoparalalistadefiltros->generar();
+                        nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+                    } else
+                    {
+                        int si = 0;
+                        matriz *sel;
+                        do
+                        {   
+                            nodolistacapa *auxLC = nlist->inicio;
+                            cout << "----- CAPAS -----" << endl;
+                            string opc = "";
+                            while(auxLC != NULL)
+                            {
+                                cout << auxLC->id << ". " << auxLC->nombre << endl;
+                                auxLC = auxLC->sig;
+                            }
+                            cout << "Selecciona el numero de una capa: ";
+                            cin >> opc;
+                            cout << endl;
+                            auxLC = nlist->inicio;
+                            while(auxLC != NULL)
+                            {
+                                if(to_string(auxLC->id) == opc)
+                                {
+                                    sel = auxLC->capa;
+                                    sel->filMXY(nf,nc);
+                                    si = 1;
+                                    break;
+                                }
+                                auxLC = auxLC->sig;
+                            }
+                            if(si == 0)
+                            {
+                                cout << "La numero de capa elegida no coincide con alguna de las capas listadas previamente\n" << endl;
+                            }
+                        } while (si != 1);
+                        nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("DobleEspejos_Capa_" + sel->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+                        nodoabbcopiadoparalalistadefiltros->generar();
+                        nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+                    }
+                } else
+                {
+                    cout << "Error con la seleccion de espejo" << endl;
+                }
+                
+            } while ((op2 != "1") && (op2 != "2") && (op2 != "3"));
+        } else if(op == "4")
+        {
+            //Collage
+        } else if(op == "5")
+        {
+            //Mosaico
+        } else
+        {
+            cout << "Error con la seleccion de filtro" << endl;
+        }
+    } while ((op != "1") && (op != "2") && (op != "3") && (op != "4") && (op != "5"));
+}
+
+int select()
+{
+    string op = "";
+    int select = -1;
+    do
+    {
+        cout << "========== APLICACION ==========" << endl;
+        cout << "1. Imagen completa" << endl;
+        cout << "2. Capa Espcifica" << endl;
+        cin >> op;
+        cout << endl;
+        if (op == "1")
+        {
+            select = 1;
+            break;
+        }
+        else if (op == "2")
+        {
+            select = 2;
+            break;
+        }
+        else
+        {
+            cout << "Opcion incorrecta" << endl;
+        }
+        
+    } while ((op!="1") || (op!="2"));
+    return select;   
 }

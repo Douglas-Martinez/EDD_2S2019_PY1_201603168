@@ -22,6 +22,14 @@ class matriz
 
         void graficar(int n,std::string car);
         void generarCeldas(FILE **f);
+
+        void filNegativo();
+        void filGris();
+        void filMX(int nc);
+        void filMY(int nf);
+        void filMXY(int nf, int nc);
+        void filCollage();
+        void filMosaico();
 };
 
 #endif // MATRIZ_H
