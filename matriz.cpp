@@ -454,3 +454,33 @@ void matriz::filMXY(int nf, int nc)
     filas = mx->filas;
     columnas = mx->columnas;
 }
+
+void matriz::filCollage(int f, int c, int nf, int nc)
+{
+    matriz *mx = new matriz(capa,nombre);
+    nodofil *auxF = filas->inicio;
+    
+    int tf = nf;
+    int tc = nc;
+    for (int i = 0; i < f; i++)
+    {
+        for (int j = 0; j < c; j++)
+        {
+            auxF = filas->inicio;
+            while(auxF != NULL)
+            {
+                nodomatriz *auxM = auxF->der;
+                while(auxM != NULL)
+                {
+                    mx->insertar((nf*i)+auxM->fila,(nc*j)+auxM->columna,auxM->r,auxM->g,auxM->b);
+                    auxM = auxM->der;
+                }
+                auxF = auxF->sig;
+            }
+        }   
+    }
+    filas = NULL;
+    columnas = NULL;
+    filas = mx->filas;
+    columnas = mx->columnas;
+}

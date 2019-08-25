@@ -28,7 +28,7 @@ class matriz
         void filMX(int nc);
         void filMY(int nf);
         void filMXY(int nf, int nc);
-        void filCollage();
+        void filCollage(int f, int c, int totF, int totC);
         void filMosaico();
 };
 

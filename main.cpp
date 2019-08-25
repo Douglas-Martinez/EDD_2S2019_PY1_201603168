@@ -751,7 +751,71 @@ void filters3()
             } while ((op2 != "1") && (op2 != "2") && (op2 != "3"));
         } else if(op == "4")
         {
+            int fil = 0;
+            int col = 0;
+            cout << "Numero de Filas: ";
+            cin >> fil;
+            cout << "Numero de Colummas: ";
+            cin >> col;
+            cout << "Fil: " << fil << ", Col: " << col << endl;
+            cout << endl;
+            
             //Collage
+            //N
+            nodocircular *nuevo = new nodocircular();
+            nuevo->filtro = "Collage";
+            nuevo->capa = selected->nombre;
+            listacapas *nlist = new listacapas(selected->nombre);
+
+            //Nueva Lista de Capas
+            nodolistacapa *auxl = selected->listaC->inicio;
+            while(auxl != NULL)
+            {
+                //Nueva Matriz
+                matriz *nuevamatriz = new matriz(auxl->capa->capa,auxl->capa->nombre);
+                
+                nodofil *auxF = auxl->capa->filas->inicio;
+                while (auxF != NULL)
+                {
+                    nodomatriz *auxM = auxF->der;
+                    while (auxM != NULL)
+                    {
+                        nuevamatriz->insertar(auxM->fila,auxM->columna,auxM->r,auxM->g,auxM->b);
+                        auxM = auxM->der;
+                    }
+                    auxF = auxF->sig;
+                }
+                //Nuevo nodo de capa
+                nodolistacapa *nuevonodocapa = new nodolistacapa(auxl->id,auxl->nombre,nuevamatriz);
+                //Inserto el nuevo nodo a la listanueva
+                nlist->insertar(nuevonodocapa);
+                auxl = auxl->sig;
+            }
+            int nf = 0;
+            nodofil *aaf = selected->listaC->todo->filas->inicio;
+            while(aaf != NULL)
+            {
+                nf = aaf->fil;
+                aaf = aaf->sig;
+            }
+            int nc = 0;
+            nodocol *aac = selected->listaC->todo->columnas->inicio;
+            while(aac != NULL)
+            {
+                nc = aac->col;
+                aac = aac->sig;
+            }
+            nodolistacapa *auxLC = nlist->inicio;
+            while(auxLC != NULL)
+            {
+                auxLC->capa->filCollage(fil,col,nf,nc);
+                auxLC = auxLC->sig;
+            }
+            nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("Collage_"+selected->nombre+"_"+to_string(fil)+"x"+to_string(col),selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+            nodoabbcopiadoparalalistadefiltros->dimW = nodoabbcopiadoparalalistadefiltros->dimW * col;
+            nodoabbcopiadoparalalistadefiltros->dimH = nodoabbcopiadoparalalistadefiltros->dimH * fil;
+            nodoabbcopiadoparalalistadefiltros->generar();
+            nuevo->fil = nodoabbcopiadoparalalistadefiltros;
         } else if(op == "5")
         {
             //Mosaico
