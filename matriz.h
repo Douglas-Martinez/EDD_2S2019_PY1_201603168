@@ -22,6 +22,7 @@ class matriz
 
         void graficar(int n,std::string car);
         void generarCeldas(FILE **f);
+        void llenar(int f, int c);
 
         void filNegativo();
         void filGris();
@@ -29,7 +30,7 @@ class matriz
         void filMY(int nf);
         void filMXY(int nf, int nc);
         void filCollage(int f, int c, int totF, int totC);
-        void filMosaico();
+        void filMosaico(int totF, int totC, matriz *base);
 };
 
 #endif // MATRIZ_H

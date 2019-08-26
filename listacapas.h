@@ -18,6 +18,7 @@ class listacapas
         void graficar_capas();
         void sobreponer();
         void linealizar();
+        void linealizarMosaico(matriz *base);
 };
 
 #endif // LISTACAPAS_H

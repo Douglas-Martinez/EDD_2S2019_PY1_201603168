@@ -267,8 +267,8 @@ void filters3()
         cout << "1. Negative" << endl;
         cout << "2. Grayscale" << endl;
         cout << "3. Mirror" << endl;
-        cout << "4. Collage!" << endl;
-        cout << "5. Mosaic!" << endl;
+        cout << "4. Collage" << endl;
+        cout << "5. Mosaic+-" << endl;
         cin >> op;
         cout << endl;
 
@@ -819,6 +819,65 @@ void filters3()
         } else if(op == "5")
         {
             //Mosaico
+            //N
+            nodocircular *nuevo = new nodocircular();
+            nuevo->filtro = "Mosaico";
+            nuevo->capa = selected->nombre;
+            listacapas *nlist = new listacapas(selected->nombre);
+            
+            //Nueva Lista de Capas
+            nodolistacapa *auxl = selected->listaC->inicio;
+            while(auxl != NULL)
+            {
+                //Nueva Matriz
+                matriz *nuevamatriz = new matriz(auxl->capa->capa,auxl->capa->nombre);
+                
+                nodofil *auxF = auxl->capa->filas->inicio;
+                while (auxF != NULL)
+                {
+                    nodomatriz *auxM = auxF->der;
+                    while (auxM != NULL)
+                    {
+                        nuevamatriz->insertar(auxM->fila,auxM->columna,auxM->r,auxM->g,auxM->b);
+                        auxM = auxM->der;
+                    }
+                    auxF = auxF->sig;
+                }
+                //Nuevo nodo de capa
+                nodolistacapa *nuevonodocapa = new nodolistacapa(auxl->id,auxl->nombre,nuevamatriz);
+                //Inserto el nuevo nodo a la listanueva
+                nlist->insertar(nuevonodocapa);
+                auxl = auxl->sig;
+            }
+            int nf = 0;
+            nodofil *aaf = selected->listaC->todo->filas->inicio;
+            while(aaf != NULL)
+            {
+                nf = aaf->fil;
+                aaf = aaf->sig;
+            }
+            int nc = 0;
+            nodocol *aac = selected->listaC->todo->columnas->inicio;
+            while(aac != NULL)
+            {
+                nc = aac->col;
+                aac = aac->sig;
+            }
+            nodolistacapa *auxLC = nlist->inicio;
+            matriz *base = selected->listaC->todo;
+            while(auxLC != NULL)
+            {
+                auxLC->capa->filMosaico(nf,nc,base);
+                auxLC = auxLC->sig;
+            }
+            nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("Mosaico_"+selected->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+            nodoabbcopiadoparalalistadefiltros->pixH = round(nodoabbcopiadoparalalistadefiltros->pixH/4);
+            nodoabbcopiadoparalalistadefiltros->pixW = round(nodoabbcopiadoparalalistadefiltros->pixW/4);
+            nodoabbcopiadoparalalistadefiltros->dimW = nodoabbcopiadoparalalistadefiltros->dimW * nodoabbcopiadoparalalistadefiltros->dimW;
+            nodoabbcopiadoparalalistadefiltros->dimH = nodoabbcopiadoparalalistadefiltros->dimH * nodoabbcopiadoparalalistadefiltros->dimH;
+            nodoabbcopiadoparalalistadefiltros->listaC->graficar_capas();
+            nodoabbcopiadoparalalistadefiltros->generar();
+            nuevo->fil = nodoabbcopiadoparalalistadefiltros;
         } else
         {
             cout << "Error con la seleccion de filtro" << endl;

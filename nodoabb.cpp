@@ -8,9 +8,13 @@ nodoabb::nodoabb(string n, int dh, int dw, int ph, int pw, listacapas *l)
     pixH = ph;
     pixW = pw;
     listaC = l;
+    fr = 51;
+    fg = 51;
+    fb = 51;
     ni = NULL;
     nd = NULL;
 }
+
 
 void nodoabb::generar()
 {
@@ -41,7 +45,7 @@ void nodoabb::generar()
         //
         //scss
         fprintf(scss,"body {\r\n");
-        fprintf(scss,"\tbackground: #333333;\r\n");
+        fprintf(scss,"\tbackground: %s;\r\n",listaC->todo->rgb_h(fr,fg,fb).c_str());
         fprintf(scss,"\theight: 100vh;\r\n");
         fprintf(scss,"\tdisplay: flex;\r\n");
         fprintf(scss,"\tjustify-content: center;\r\n");
@@ -83,7 +87,11 @@ void nodoabb::generar()
             if(aux->colorH != "//")
             {
                 fprintf(scss,".pixel:nth-child(%i) { background: %s }\r\n",cn,aux->colorH.c_str());
+            } else
+            {
+                fprintf(scss,".pixel:nth-child(%i) { background: %s }\r\n",cn,listaC->todo->rgb_h(fr,fg,fb).c_str());
             }
+            
             cn++;
             aux = aux->sig;
         }
@@ -97,9 +105,3 @@ void nodoabb::generar()
     fclose(html);
     fclose(scss);
 }
-
-/*
-//recorrido
-//html
-fprintf(html,"<div class=\"pixel\"></div>\r\n");
-*/

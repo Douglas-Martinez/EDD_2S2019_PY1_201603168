@@ -15,6 +15,9 @@ class nodoabb
         int dimW;
         int pixH;
         int pixW;
+        int fr;
+        int fg;
+        int fb;
         int totFil;
         int totCol;
         listacapas *listaC;

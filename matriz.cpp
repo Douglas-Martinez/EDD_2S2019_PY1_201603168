@@ -484,3 +484,74 @@ void matriz::filCollage(int f, int c, int nf, int nc)
     filas = mx->filas;
     columnas = mx->columnas;
 }
+
+void matriz::filMosaico(int totF, int totC, matriz *base)
+{
+    matriz *nuevamatriz = new matriz(base->capa,base->nombre);
+                
+    nodofil *auxFN = base->filas->inicio;
+    while (auxFN != NULL)
+    {
+        nodomatriz *auxM = auxFN->der;
+        while (auxM != NULL)
+        {
+            nuevamatriz->insertar(auxM->fila,auxM->columna,auxM->r,auxM->g,auxM->b);
+            auxM = auxM->der;
+        }
+        auxFN = auxFN->sig;
+    }
+    nuevamatriz->llenar(totF,totC);
+
+    matriz *mx = new matriz(capa,nombre);
+    //nodofil *auxF = filas->inicio;
+    nodofil *auxF = nuevamatriz->filas->inicio;
+
+    for (int i = 0; i < totF; i++)
+    {
+        for (int j = 0; j < totC; j++)
+        {
+            if(nuevamatriz->buscar(i+1,j+1) != NULL)
+            {
+                auxF = nuevamatriz->filas->inicio;
+                nodomatriz *temp = nuevamatriz->buscar(i+1,j+1);
+                while(auxF != NULL)
+                {
+                    nodomatriz *auxM = auxF->der;
+                    while(auxM != NULL)
+                    {
+                        mx->insertar((totF*i)+auxM->fila,(totC*j)+auxM->columna,(temp->r + auxM->r)/2,(temp->g + auxM->g)/2,(temp->b + auxM->b)/2);
+                        auxM = auxM->der;
+                    }
+                    auxF = auxF->sig;
+                }
+            }
+        }   
+    }
+    filas = NULL;
+    columnas = NULL;
+    filas = mx->filas;
+    columnas = mx->columnas;
+}
+
+void matriz::llenar(int f, int c)
+{
+    matriz *mx = new matriz(capa,nombre);
+    for (int i = 0; i < f; i++)
+    {
+        for (int j = 0; j < c; j++)
+        {
+            nodomatriz *aux = buscar(i+1,j+1);
+            if(aux == NULL)
+            {
+                mx->insertar(i+1,j+1,51,51,51);
+            } else
+            {
+                mx->insertar(aux->fila,aux->columna,aux->r,aux->g,aux->b);
+            }
+        }
+    }
+    filas = NULL;
+    columnas = NULL;
+    filas = mx->filas;
+    columnas = mx->columnas;
+}
