@@ -14,7 +14,10 @@ void menu();
 void insert1();
 void select2();
 void filters3();
+void editing4();
+void export5();
 int select();
+nodoabb* selectFilter();
 
 static abb *arbolBin = new abb();
 static nodoabb *selected = NULL;
@@ -54,7 +57,7 @@ void menu()
             } else 
             {
                 select2();
-                selected->generar();
+                selected->listaC->sobreponer();
                 filtros = new listacircular();
             }
         } else if(op.compare("3") == 0)
@@ -71,14 +74,20 @@ void menu()
             if(selected == NULL)
             {
                 cout << "No hay una imagen seleccionada para poder continuar" << endl;
+            } else
+            {
+                editing4();
             }
-            //metodo1
         } else if(op.compare("5") == 0)
         {
             if(selected == NULL)
             {
                 cout << "No hay una imagen seleccionada para poder continuar" << endl;
+            } else
+            {
+                
             }
+            
             //metodo1
         } else if(op.compare("6") == 0)
         {
@@ -352,6 +361,9 @@ void filters3()
                     }
                 } while (si != 1);
                 nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("Negativo_Capa_" + sel->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
+                nodoabbcopiadoparalalistadefiltros->fr = 255 - nodoabbcopiadoparalalistadefiltros->fr;
+                nodoabbcopiadoparalalistadefiltros->fg = 255 - nodoabbcopiadoparalalistadefiltros->fg;
+                nodoabbcopiadoparalalistadefiltros->fb = 255 - nodoabbcopiadoparalalistadefiltros->fb;
                 nodoabbcopiadoparalalistadefiltros->generar();
                 nuevo->fil = nodoabbcopiadoparalalistadefiltros;
             }
@@ -401,7 +413,7 @@ void filters3()
                     auxLC = auxLC->sig;
                 }
                 nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("GrayScale_Completo_" + selected->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
-                nodoabbcopiadoparalalistadefiltros->generar();
+                //nodoabbcopiadoparalalistadefiltros->generar();
                 nuevo->fil = nodoabbcopiadoparalalistadefiltros;
             } else
             {
@@ -438,7 +450,7 @@ void filters3()
                     }
                 } while (si != 1);
                 nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("GrayScale_Capa_" + sel->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
-                nodoabbcopiadoparalalistadefiltros->generar();
+                //nodoabbcopiadoparalalistadefiltros->generar();
                 nuevo->fil = nodoabbcopiadoparalalistadefiltros;
             }
             //nodoabbcopiadoparalalistadefiltros->generar();
@@ -507,7 +519,7 @@ void filters3()
                             auxLC = auxLC->sig;
                         }
                         nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("EspejoX_Completo_" + selected->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
-                        nodoabbcopiadoparalalistadefiltros->generar();
+                        //nodoabbcopiadoparalalistadefiltros->generar();
                         nuevo->fil = nodoabbcopiadoparalalistadefiltros;
                     } else
                     {
@@ -544,10 +556,9 @@ void filters3()
                             }
                         } while (si != 1);
                         nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("EspejoX_Capa_" + sel->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
-                        nodoabbcopiadoparalalistadefiltros->generar();
+                        //nodoabbcopiadoparalalistadefiltros->generar();
                         nuevo->fil = nodoabbcopiadoparalalistadefiltros;
                     }
-
                     //nodoabbcopiadoparalalistadefiltros->generar();
                     //nuevo->fil = nodoabbcopiadoparalalistadefiltros;
                     filtros->insertar(nuevo);
@@ -602,7 +613,7 @@ void filters3()
                             auxLC = auxLC->sig;
                         }
                         nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("EspejoY_Completo_" + selected->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
-                        nodoabbcopiadoparalalistadefiltros->generar();
+                        //nodoabbcopiadoparalalistadefiltros->generar();
                         nuevo->fil = nodoabbcopiadoparalalistadefiltros;
                     } else
                     {
@@ -639,7 +650,7 @@ void filters3()
                             }
                         } while (si != 1);
                         nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("EspejoY_Capa_" + sel->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
-                        nodoabbcopiadoparalalistadefiltros->generar();
+                        //nodoabbcopiadoparalalistadefiltros->generar();
                         nuevo->fil = nodoabbcopiadoparalalistadefiltros;
                     }
 
@@ -650,7 +661,7 @@ void filters3()
                 {
                     //N
                     nodocircular *nuevo = new nodocircular();
-                    nuevo->filtro = "EspejoX";
+                    nuevo->filtro = "EspejoXY";
                     nuevo->capa = selected->nombre;
                     listacapas *nlist = new listacapas(selected->nombre);
 
@@ -703,7 +714,7 @@ void filters3()
                             auxLC = auxLC->sig;
                         }
                         nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("DobleEspejo_Completo_" + selected->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
-                        nodoabbcopiadoparalalistadefiltros->generar();
+                        //nodoabbcopiadoparalalistadefiltros->generar();
                         nuevo->fil = nodoabbcopiadoparalalistadefiltros;
                     } else
                     {
@@ -740,9 +751,10 @@ void filters3()
                             }
                         } while (si != 1);
                         nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("DobleEspejos_Capa_" + sel->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
-                        nodoabbcopiadoparalalistadefiltros->generar();
+                        //nodoabbcopiadoparalalistadefiltros->generar();
                         nuevo->fil = nodoabbcopiadoparalalistadefiltros;
                     }
+                    filtros->insertar(nuevo);
                 } else
                 {
                     cout << "Error con la seleccion de espejo" << endl;
@@ -814,8 +826,9 @@ void filters3()
             nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("Collage_"+selected->nombre+"_"+to_string(fil)+"x"+to_string(col),selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
             nodoabbcopiadoparalalistadefiltros->dimW = nodoabbcopiadoparalalistadefiltros->dimW * col;
             nodoabbcopiadoparalalistadefiltros->dimH = nodoabbcopiadoparalalistadefiltros->dimH * fil;
-            nodoabbcopiadoparalalistadefiltros->generar();
+            //nodoabbcopiadoparalalistadefiltros->generar();
             nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+            filtros->insertar(nuevo);
         } else if(op == "5")
         {
             //Mosaico
@@ -875,14 +888,131 @@ void filters3()
             nodoabbcopiadoparalalistadefiltros->pixW = round(nodoabbcopiadoparalalistadefiltros->pixW/4);
             nodoabbcopiadoparalalistadefiltros->dimW = nodoabbcopiadoparalalistadefiltros->dimW * nodoabbcopiadoparalalistadefiltros->dimW;
             nodoabbcopiadoparalalistadefiltros->dimH = nodoabbcopiadoparalalistadefiltros->dimH * nodoabbcopiadoparalalistadefiltros->dimH;
-            nodoabbcopiadoparalalistadefiltros->listaC->graficar_capas();
-            nodoabbcopiadoparalalistadefiltros->generar();
+            //nodoabbcopiadoparalalistadefiltros->generar();
             nuevo->fil = nodoabbcopiadoparalalistadefiltros;
         } else
         {
             cout << "Error con la seleccion de filtro" << endl;
         }
     } while ((op != "1") && (op != "2") && (op != "3") && (op != "4") && (op != "5"));
+}
+
+void editing4()
+{
+    cout << "========== EDICION MANUAL ==========" << endl;
+    nodoabb *ed;
+    string op = "";
+    cout << "1. OG Image" << endl;
+    cout << "2. Filters" << endl;
+    cin >> op;
+    cout << endl;
+    string f, c, r, g, b, capa;
+    if(op == "1")
+    {
+        ed = selected;
+        cout << "===== ORIGINAL =====" << endl << endl;
+        cout << "No. Fila: ";
+        cin >> f;
+        cout << "No. Columna: ";
+        cin >> c;
+        cout << "Capa: ";
+        cin >> capa;
+        cout << "Valor r: ";
+        cin >> r;
+        cout << "Valor g: ";
+        cin >> g;
+        cout << "Valor b: ";
+        cin >> b;
+        //
+        nodolistacapa *auxLC = ed->listaC->inicio;
+        int si = 0;
+        while(auxLC != NULL)
+        {
+            if(auxLC->nombre == capa)
+            {
+                cout << auxLC->capa->nombre << endl;
+                si = 1;
+                nodomatriz *mod = auxLC->capa->buscar(stoi(f),stoi(c));
+                if(mod != NULL)
+                {
+                    mod->r = stoi(r);
+                    mod->g = stoi(g);
+                    mod->b = stoi(b);
+                } else
+                {
+                    cout << "No existe esa posicion en la capa" << endl;
+                }
+                break;
+            }
+            auxLC = auxLC->sig;
+        }
+        ed->listaC->sobreponer();
+        if(si != 1)
+        {
+            cout << "No existe capa con ese nombre" << endl;
+        }
+    } else if(op == "2")
+    {
+        if(filtros->primero != NULL)
+        {
+            ed = selectFilter();
+            if(ed != NULL)
+            {
+                cout << "===== Filtro: " << ed->nd << " =====" << endl << endl;
+                cout << "No. Fila: ";
+                cin >> f;
+                cout << "No. Columna: ";
+                cin >> c;
+                cout << "Capa: ";
+                cin >> capa;
+                cout << "Valor r: ";
+                cin >> r;
+                cout << "Valor g: ";
+                cin >> g;
+                cout << "Valor b: ";
+                cin >> b;
+                //
+                nodolistacapa *auxLC = ed->listaC->inicio;
+                int si = 0;
+                while(auxLC != NULL)
+                {
+                    if(auxLC->nombre == capa)
+                    {
+                        cout << auxLC->capa->nombre << endl;
+                        si = 1;
+                        nodomatriz *mod = auxLC->capa->buscar(stoi(f),stoi(c));
+                        if(mod != NULL)
+                        {
+                            mod->r = stoi(r);
+                            mod->g = stoi(g);
+                            mod->b = stoi(b);
+                        } else
+                        {
+                            cout << "No existe esa posicion en la capa" << endl;
+                        }
+                        break;
+                    }
+                    auxLC = auxLC->sig;
+                }
+                ed->listaC->sobreponer();
+                if(si != 1)
+                {
+                    cout << "No existe capa con ese nombre" << endl;
+                }
+            }
+        } else
+        {
+            cout << "No hay filtros disponibles" << endl << endl;
+        }
+    } else
+    {
+        cout << "Opcion incorrecta" << endl << endl;
+    }
+}
+
+void export5()
+{
+    
 }
 
 int select()
@@ -913,4 +1043,38 @@ int select()
         
     } while ((op!="1") || (op!="2"));
     return select;   
+}
+
+nodoabb* selectFilter()
+{
+    nodoabb *ret = NULL;
+    cout << "========== FILTROS ==========" << endl;
+    string op = "";
+    nodocircular *aux = filtros->primero;
+    do
+    {
+        cout << aux->id << ". " << aux->fil->nombre << endl;
+        aux = aux->sig;
+    }while(aux != filtros->primero);
+    cout << endl;
+    cout << "Elige un numero de imagen para editar: ";
+    cin >> op;
+    nodocircular *aux2 = filtros->primero;
+    int si = 0;
+    do
+    {
+        if(op == to_string(aux2->id))
+        {
+            ret = aux2->fil;
+            si = 1;
+            return ret;
+            break;
+        }
+        aux2 = aux2->sig;
+    }while(aux2 != filtros->primero);
+    if (si == 0)
+    {
+        cout << "Error al seleccionar la imagen" << endl;
+    }
+    return ret;
 }

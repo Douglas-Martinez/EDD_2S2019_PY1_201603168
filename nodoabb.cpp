@@ -91,7 +91,6 @@ void nodoabb::generar()
             {
                 fprintf(scss,".pixel:nth-child(%i) { background: %s }\r\n",cn,listaC->todo->rgb_h(fr,fg,fb).c_str());
             }
-            
             cn++;
             aux = aux->sig;
         }

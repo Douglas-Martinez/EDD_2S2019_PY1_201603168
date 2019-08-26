@@ -11,10 +11,14 @@ void listacircular::insertar(nodocircular *nuevo)
 {
     if(primero == NULL)
     {
+        nuevo->id = 1;
+        nuevo->sig = nuevo;
+        nuevo->ant = nuevo;
         primero = nuevo;
         ultimo = nuevo;
     } else
     {
+        nuevo->id = ultimo->id + 1;
         nuevo->sig = primero;
         nuevo->ant = ultimo;
         ultimo->sig = nuevo;

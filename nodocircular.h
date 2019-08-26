@@ -8,6 +8,7 @@
 class nodocircular
 {
     public:
+        int id;
         std::string filtro;
         std::string capa;
         
@@ -17,6 +18,7 @@ class nodocircular
 
         nodocircular()
         {
+            id = -1;
             filtro = "";
             capa = "";
             fil = NULL;
