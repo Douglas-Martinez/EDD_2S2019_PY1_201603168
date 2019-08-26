@@ -29,7 +29,7 @@ void abb::insertar(nodoabb *r, string n, int dh, int dw, int ph, int pw, listaca
             //Aqui va si es por la izquierda
             r->ni = new nodoabb(n,dh,dw,ph,pw,l);
         }
-    } else
+    } else if(n > r->nombre)
     {
         if(r->nd != NULL)
         {
@@ -39,7 +39,14 @@ void abb::insertar(nodoabb *r, string n, int dh, int dw, int ph, int pw, listaca
             //Aqui va si es por la derecha
             r->nd = new nodoabb(n,dh,dw,ph,pw,l);
         }
+    } else if(n == r->nombre)
+    {
+        cout << "Ya existe esa imagen, no se puede repetir" << endl;
+    } else
+    {
+        cout << "Otro error no contemplado..." << endl;
     }
+    
 }
 
 nodoabb* abb::buscar(nodoabb *r, string n)
@@ -97,6 +104,8 @@ void abb::nodo(nodoabb *r, FILE **f)
     if(r != NULL)
     {
         fprintf((*f),"\"%p\"[label=\"%s\nDim:(%i,%i)\nPix:(%i,%i)\"];\r\n",r,r->nombre.c_str(),r->dimH,r->dimW,r->pixH,r->pixW);
+        nodo(r->ni,&(*f));
+        nodo(r->nd,&(*f));
     }
 }
 
@@ -112,8 +121,8 @@ void abb::link(nodoabb *r, FILE **f)
         {
             fprintf((*f),"\"%p\"->\"%p\";\r\n",r,r->nd);
         }
-        nodo(r->ni,&(*f));
-        nodo(r->nd,&(*f));
+        link(r->ni,&(*f));
+        link(r->nd,&(*f));
     }
 }
 

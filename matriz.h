@@ -23,6 +23,8 @@ class matriz
         void graficar(int n,std::string car);
         void generarCeldas(FILE **f);
         void llenar(int f, int c);
+        void xFilas();
+        void xColumnas();
 
         void filNegativo();
         void filGris();

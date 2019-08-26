@@ -42,14 +42,14 @@ void listacircular::graficar()
     {
         if(primero == ultimo && primero != NULL)
         {
-            fprintf(f,"\t\"%p\"[label=\"%s\"];\r\n",aux,aux->filtro.c_str());
+            fprintf(f,"\t\"%p\"[label=\"%s\"];\r\n",aux,aux->fil->nombre.c_str());
             fprintf(f,"\t\"%p\"->\"%p\"\r\n",aux,aux->sig);
             fprintf(f,"\t\"%p\"->\"%p\"\r\n",aux,aux->ant);
         } else
         {
             do
             {
-                fprintf(f,"\t\"%p\"[label=\"%s\"];\r\n",aux,aux->filtro.c_str());
+                fprintf(f,"\t\"%p\"[label=\"%s\"];\r\n",aux,aux->fil->nombre.c_str());
                 aux = aux->sig;
             } while (aux != primero);
             aux = primero;

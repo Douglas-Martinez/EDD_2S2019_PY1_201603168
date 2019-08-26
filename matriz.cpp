@@ -120,17 +120,8 @@ nodomatriz* matriz::buscar(int f, int c)
 
 void matriz::graficar(int n,std::string car)
 {
-    std::string rut;
-    std::string img;
-    if(n == -1)
-    {
-        rut = nombre + ".dot";
-        img = nombre + ".png";
-    } else 
-    {
-        rut = "Capa_" + nombre + ".dot";
-        img = "Capa_" + nombre + ".png";
-    }
+    std::string rut = "Capa_" + nombre + ".dot";
+    std::string img = "Capa_" + nombre + ".png";
     std::string com = "neato -Tpng " + rut + " -o " + img;
     std::string dis = "eog " + img;
     
@@ -149,7 +140,7 @@ void matriz::graficar(int n,std::string car)
         fprintf(f,"}");
         fclose(f);
         system(com.c_str());
-        //system(dis.c_str());
+        system(dis.c_str());
     }
 }
 
@@ -554,4 +545,127 @@ void matriz::llenar(int f, int c)
     columnas = NULL;
     filas = mx->filas;
     columnas = mx->columnas;
+}
+
+void matriz::xFilas()
+{
+    std::string rut = "Filas_" + nombre + ".dot";
+    std::string img = "Filas_" + nombre + ".png";
+    std::string com = "dot -Tpng " + rut + " -o " + img;
+    std::string dis = "eog " + img;
+
+    FILE *f;
+    f = fopen(rut.c_str(),"w+");
+    if(f)
+    {
+        fprintf(f,"digraph Filas{\r\n");
+        fprintf(f,"rankdir=LR;\r\n");
+        if(filas != NULL)
+        {
+            nodofil *auxF = filas->inicio;
+            nodomatriz *auxM = auxF->der;
+            while(auxF != NULL)
+            {
+                auxM = auxF->der;
+                nodomatriz *auxM = auxF->der;
+                while(auxM != NULL)
+                {
+                    fprintf(f,"\"%p\"[label=\"(%i, %i) | %i-%i-%i\", style=\"filled\", shape=\"box\", fillcolor=\"beige\"];\r\n",auxM,auxM->fila,auxM->columna,auxM->r,auxM->g,auxM->b);
+                    auxM = auxM->der;
+                }
+                auxF = auxF->sig;
+            }
+            int l = 0;
+            auxF = filas->inicio;
+            auxM = auxF->der;
+            fprintf(f,"\"%p\"",auxM);
+            auxM = auxM->der;
+            while(auxF != NULL)
+            {
+                if(l == 0)
+                {
+                    l = 1;
+                } else if(l == 1)
+                {
+                    auxM = auxF->der;
+                }
+
+                while(auxM != NULL)
+                {
+                    fprintf(f,"->\"%p\"",auxM);
+                    auxM = auxM->der;
+                }
+                auxF = auxF->sig;
+            }
+        } else
+        {
+            fprintf(f,"\"Capa Vacia\";\r\n");
+        }
+        
+        fprintf(f,"}");
+        fclose(f);
+        system(com.c_str());
+        system(dis.c_str());
+    }
+}
+
+void matriz::xColumnas()
+{
+    std::string rut = "Columnas_" + nombre + ".dot";
+    std::string img = "Columnas_" + nombre + ".png";
+    std::string com = "dot -Tpng " + rut + " -o " + img;
+    std::string dis = "eog " + img;
+
+    FILE *f;
+    f = fopen(rut.c_str(),"w+");
+    if(f)
+    {
+        fprintf(f,"digraph Columnas{\r\n");
+        fprintf(f,"rankdir=TB;\r\n");
+        if(filas != NULL)
+        {
+            nodocol *auxC = columnas->inicio;
+            nodomatriz *auxM = auxC->abajo;
+            while(auxC != NULL)
+            {
+                auxM = auxC->abajo;
+                nodomatriz *auxM = auxC->abajo;
+                while(auxM != NULL)
+                {
+                    fprintf(f,"\"%p\"[label=\"(%i, %i) | %i-%i-%i\", style=\"filled\", shape=\"box\", fillcolor=\"beige\"];\r\n",auxM,auxM->fila,auxM->columna,auxM->r,auxM->g,auxM->b);
+                    auxM = auxM->abajo;
+                }
+                auxC = auxC->sig;
+            }
+            int l = 0;
+            auxC = columnas->inicio;
+            auxM = auxC->abajo;
+            fprintf(f,"\"%p\"",auxM);
+            auxM = auxM->abajo;
+            while(auxC != NULL)
+            {
+                if(l == 0)
+                {
+                    l = 1;
+                } else if(l == 1)
+                {
+                    auxM = auxC->abajo;
+                }
+                
+                while(auxM != NULL)
+                {
+                    fprintf(f,"->\"%p\"",auxM);
+                    auxM = auxM->abajo;
+                }
+                auxC = auxC->sig;
+            }
+        } else
+        {
+            fprintf(f,"\"Capa Vacia\";\r\n");
+        }
+        fprintf(f,"}");
+        fclose(f);
+        system(com.c_str());
+        system(dis.c_str());
+    }
 }
