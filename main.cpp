@@ -85,10 +85,8 @@ void menu()
                 cout << "No hay una imagen seleccionada para poder continuar" << endl;
             } else
             {
-                
+                export5();
             }
-            
-            //metodo1
         } else if(op.compare("6") == 0)
         {
             //metodo1
@@ -324,7 +322,10 @@ void filters3()
                     auxLC = auxLC->sig;
                 }
                 nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("Negativo_Completo_" + selected->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
-                nodoabbcopiadoparalalistadefiltros->generar();
+                nodoabbcopiadoparalalistadefiltros->fr = 255 - nodoabbcopiadoparalalistadefiltros->fr;
+                nodoabbcopiadoparalalistadefiltros->fg = 255 - nodoabbcopiadoparalalistadefiltros->fg;
+                nodoabbcopiadoparalalistadefiltros->fb = 255 - nodoabbcopiadoparalalistadefiltros->fb;
+                //nodoabbcopiadoparalalistadefiltros->generar();
                 nuevo->fil = nodoabbcopiadoparalalistadefiltros;
             } else
             {
@@ -361,10 +362,7 @@ void filters3()
                     }
                 } while (si != 1);
                 nodoabb *nodoabbcopiadoparalalistadefiltros = new nodoabb("Negativo_Capa_" + sel->nombre,selected->dimH,selected->dimW,selected->pixH,selected->pixW,nlist);
-                nodoabbcopiadoparalalistadefiltros->fr = 255 - nodoabbcopiadoparalalistadefiltros->fr;
-                nodoabbcopiadoparalalistadefiltros->fg = 255 - nodoabbcopiadoparalalistadefiltros->fg;
-                nodoabbcopiadoparalalistadefiltros->fb = 255 - nodoabbcopiadoparalalistadefiltros->fb;
-                nodoabbcopiadoparalalistadefiltros->generar();
+                //nodoabbcopiadoparalalistadefiltros->generar();
                 nuevo->fil = nodoabbcopiadoparalalistadefiltros;
             }
             //nodoabbcopiadoparalalistadefiltros->generar();
@@ -999,7 +997,11 @@ void editing4()
                 {
                     cout << "No existe capa con ese nombre" << endl;
                 }
+            } else
+            {
+                cout << "Problemas con encontrar el filtro" << endl;
             }
+            
         } else
         {
             cout << "No hay filtros disponibles" << endl << endl;
@@ -1012,8 +1014,41 @@ void editing4()
 
 void export5()
 {
+    cout << "========== EXPORTAR ==========" << endl;
+    nodoabb *sel;
+    nodocircular *aux = filtros->primero;
+    string op;
+    cout << "1. OG Image" << endl;
+    cout << "2. Filters" << endl;
+    cin >> op;
+    if(op == "1")
+    {
+        sel = selected;
+        sel->generar();
+    } else if (op == "2")
+    {
+        if(filtros->primero != NULL)
+        {
+            sel = selectFilter();
+            if(sel != NULL)
+            {
+                sel->generar();
+            } else
+            {
+                cout << "Problemas con encontrar el filtro\n" << endl;
+            }
+        } else
+        {
+            cout << "No hay filtros disponibles\n" << endl;
+        }
+    } else
+    {
+        cout << "Opcion incorrecta\n" << endl;
+    }
     
 }
+
+
 
 int select()
 {
@@ -1057,7 +1092,7 @@ nodoabb* selectFilter()
         aux = aux->sig;
     }while(aux != filtros->primero);
     cout << endl;
-    cout << "Elige un numero de imagen para editar: ";
+    cout << "Elige un numero de imagen: ";
     cin >> op;
     nodocircular *aux2 = filtros->primero;
     int si = 0;
@@ -1074,7 +1109,7 @@ nodoabb* selectFilter()
     }while(aux2 != filtros->primero);
     if (si == 0)
     {
-        cout << "Error al seleccionar la imagen" << endl;
+        cout << "Error al seleccionar la imagen\n" << endl;
     }
     return ret;
 }
