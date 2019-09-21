@@ -70,6 +70,54 @@ void listacapas::sobreponer()
     }
 }
 
+void listacapas::linealizar2()
+{
+    linealizada = new listalineal();
+    linealizada->nombre = todo->nombre;
+    //sobreponer();
+    int x = 0;
+    int y = 0;
+    
+    nodofil *auxF = todo->filas->inicio;
+    nodocol *auxC = todo->columnas->inicio;
+    while(auxF != NULL)
+    {
+        y = auxF->fil;
+        auxF = auxF->sig;
+    }
+    while(auxC != NULL)
+    {
+        x = auxC->col;
+        auxC = auxC->sig;
+    }
+    linealizada->totF = y;
+    linealizada->totC = x;
+    //lineal por filas = i*columnas + j
+    for (int q = 0; q < y; q++)
+    {
+        for (int w = 0; w < x; w++)
+        {
+            int pos = q*x+w;
+            linealizada->insertar(new nodolineal(pos,q,w,"//"));
+        }   
+    }
+    //Buscar y cambiar
+    auxF = todo->filas->inicio;
+    while(auxF != NULL)
+    {
+        nodomatriz *auxM = auxF->der;
+        while(auxM != NULL)
+        {
+            int pos = (auxM->fila-1) * x + (auxM->columna)-1;
+            string color = todo->rgb_h(auxM->r,auxM->g,auxM->b);
+            nodolineal *bus = linealizada->buscar(pos);
+            bus->colorH = color;
+            auxM = auxM->der;
+        }
+        auxF = auxF->sig;
+    }
+}
+
 void listacapas::linealizar()
 {
     linealizada = new listalineal();

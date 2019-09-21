@@ -25,6 +25,7 @@ class nodoabb
 
         nodoabb(string n, int dh, int dw, int ph, int pw, listacapas *l);
         void generar();
+        void generar2();
 };
 
 #endif // NODOABB_H

@@ -19,8 +19,12 @@ void export5();
 void reports6();
 int select();
 nodoabb* selectIm();
+/*
 nodoabb* selectFilter();
 nodoabb* selectFilterNo();
+*/
+nodocircular* selectFilter();
+nodocircular* selectFilterNo();
 
 static abb *arbolBin = new abb();
 static nodoabb *selected = NULL;
@@ -171,6 +175,7 @@ void insert1()
                         }
                         con2++;
                     }
+                    //cout << "---------- Configuracion Leida ----------" << endl;
                 } else
                 {
                     int contF = 1;
@@ -194,7 +199,7 @@ void insert1()
                         string c;
                         while(getline(sss,c,','))
                         {
-                            if((c != "x") && (c != "X") && (c != ""))
+                            if((c != "x") && (c != "X") && (c != "") && (c != " "))
                             {
                                 string r;
                                 string g;
@@ -216,6 +221,7 @@ void insert1()
                     }
                     nodolistacapa *nuevo = new nodolistacapa(stoi(layer),nI,m);
                     lista->insertar(nuevo);
+                    //cout << "---------- " << nI << " Leido ----------" << endl;
                 }
             }
             con ++;
@@ -833,7 +839,6 @@ void filters3()
         } else if(op == "5")
         {
             //Mosaico
-            //N
             nodocircular *nuevo = new nodocircular();
             nuevo->filtro = "Mosaico";
             nuevo->capa = selected->nombre;
@@ -891,6 +896,8 @@ void filters3()
             nodoabbcopiadoparalalistadefiltros->dimH = nodoabbcopiadoparalalistadefiltros->dimH * nodoabbcopiadoparalalistadefiltros->dimH;
             //nodoabbcopiadoparalalistadefiltros->generar();
             nuevo->fil = nodoabbcopiadoparalalistadefiltros;
+            nuevo->fil->listaC->sobreponer();
+            filtros->insertar(nuevo);
         } else
         {
             cout << "Error con la seleccion de filtro" << endl;
@@ -901,7 +908,6 @@ void filters3()
 void editing4()
 {
     cout << "========== EDICION MANUAL ==========" << endl;
-    nodoabb *ed;
     string op = "";
     cout << "1. OG Image" << endl;
     cout << "2. Filters" << endl;
@@ -910,7 +916,6 @@ void editing4()
     string f, c, r, g, b, capa;
     if(op == "1")
     {
-        ed = selected;
         cout << "===== ORIGINAL =====" << endl << endl;
         cout << "No. Fila: ";
         cin >> f;
@@ -925,7 +930,7 @@ void editing4()
         cout << "Valor b: ";
         cin >> b;
         //
-        nodolistacapa *auxLC = ed->listaC->inicio;
+        nodolistacapa *auxLC = selected->listaC->inicio;
         int si = 0;
         while(auxLC != NULL)
         {
@@ -947,7 +952,7 @@ void editing4()
             }
             auxLC = auxLC->sig;
         }
-        ed->listaC->sobreponer();
+        selected->listaC->sobreponer();
         if(si != 1)
         {
             cout << "No existe capa con ese nombre" << endl;
@@ -956,49 +961,68 @@ void editing4()
     {
         if(filtros->primero != NULL)
         {
-            ed = selectFilter();
+            nodocircular *ed = selectFilter();
             if(ed != NULL)
             {
-                cout << "===== Filtro: " << ed->nd << " =====" << endl << endl;
-                cout << "No. Fila: ";
-                cin >> f;
-                cout << "No. Columna: ";
-                cin >> c;
-                cout << "Capa: ";
-                cin >> capa;
-                cout << "Valor r: ";
-                cin >> r;
-                cout << "Valor g: ";
-                cin >> g;
-                cout << "Valor b: ";
-                cin >> b;
-                //
-                nodolistacapa *auxLC = ed->listaC->inicio;
-                int si = 0;
-                while(auxLC != NULL)
-                {
-                    if(auxLC->nombre == capa)
+                if(ed->filtro == "Mosaico") {
+                    cout << "===== Filtro: "  << ed->filtro << ": " << ed->fil->nd << " =====" << endl << endl;
+                    cout << "No. Fila: ";
+                    cin >> f;
+                    cout << "No. Columna: ";
+                    cin >> c;
+                    cout << "Valor r: ";
+                    cin >> r;
+                    cout << "Valor g: ";
+                    cin >> g;
+                    cout << "Valor b: ";
+                    cin >> b;
+                    //
+                    nodomatriz* nmaux = ed->fil->listaC->todo->buscar(stoi(f),stoi(c));
+                    nmaux->r = stoi(r);
+                    nmaux->g = stoi(g);
+                    nmaux->b = stoi(b);
+                } else {
+                    cout << "===== Filtro: " << ed->fil->nd << " =====" << endl << endl;
+                    cout << "No. Fila: ";
+                    cin >> f;
+                    cout << "No. Columna: ";
+                    cin >> c;
+                    cout << "Capa: ";
+                    cin >> capa;
+                    cout << "Valor r: ";
+                    cin >> r;
+                    cout << "Valor g: ";
+                    cin >> g;
+                    cout << "Valor b: ";
+                    cin >> b;
+                    //
+                    nodolistacapa *auxLC = ed->fil->listaC->inicio;
+                    int si = 0;
+                    while(auxLC != NULL)
                     {
-                        cout << auxLC->capa->nombre << endl;
-                        si = 1;
-                        nodomatriz *mod = auxLC->capa->buscar(stoi(f),stoi(c));
-                        if(mod != NULL)
+                        if(auxLC->nombre == capa)
                         {
-                            mod->r = stoi(r);
-                            mod->g = stoi(g);
-                            mod->b = stoi(b);
-                        } else
-                        {
-                            cout << "No existe esa posicion en la capa" << endl;
+                            cout << auxLC->capa->nombre << endl;
+                            si = 1;
+                            nodomatriz *mod = auxLC->capa->buscar(stoi(f),stoi(c));
+                            if(mod != NULL)
+                            {
+                                mod->r = stoi(r);
+                                mod->g = stoi(g);
+                                mod->b = stoi(b);
+                            } else
+                            {
+                                cout << "No existe esa posicion en la capa" << endl;
+                            }
+                            break;
                         }
-                        break;
+                        auxLC = auxLC->sig;
                     }
-                    auxLC = auxLC->sig;
-                }
-                ed->listaC->sobreponer();
-                if(si != 1)
-                {
-                    cout << "No existe capa con ese nombre" << endl;
+                    ed->fil->listaC->sobreponer();
+                    if(si != 1)
+                    {
+                        cout << "No existe capa con ese nombre" << endl;
+                    }
                 }
             } else
             {
@@ -1018,7 +1042,8 @@ void editing4()
 void export5()
 {
     cout << "========== EXPORTAR ==========" << endl;
-    nodoabb *sel;
+    //nodoabb *sel;
+    nodocircular *sel;
     nodocircular *aux = filtros->primero;
     string op;
     cout << "1. OG Image" << endl;
@@ -1026,8 +1051,7 @@ void export5()
     cin >> op;
     if(op == "1")
     {
-        sel = selected;
-        sel->generar();
+        selected->generar();
     } else if (op == "2")
     {
         if(filtros->primero != NULL)
@@ -1035,7 +1059,11 @@ void export5()
             sel = selectFilter();
             if(sel != NULL)
             {
-                sel->generar();
+                if(sel->filtro == "Mosaico") {
+                    sel->fil->generar2();
+                } else {
+                    sel->fil->generar();
+                }
             } else
             {
                 cout << "Problemas con encontrar el filtro\n" << endl;
@@ -1223,10 +1251,11 @@ void reports6()
         } else if (op == "5")
         {
             string op2 = "";
-            nodoabb *sel;
+            //nodoabb *sel;
+            nodocircular *sel;
             if(filtros->primero != NULL)
             {
-                sel = selectFilterNo();
+                sel = selectFilter();
                 if(sel != NULL)
                 {
                     string op01 = "";
@@ -1236,7 +1265,10 @@ void reports6()
                     cout << endl;
                     if(op01 == "1")
                     {
-                        nodolistacapa * auxLC = sel->listaC->inicio;
+                        if(sel->filtro == "Mosaico") {
+                            cout << "Todas las capas del mosaico tienen el mosaico implementado" << endl;
+                        }
+                        nodolistacapa * auxLC = sel->fil->listaC->inicio;
                         cout << "==== Capas ====" << endl;
                         while(auxLC != NULL)
                         {
@@ -1246,7 +1278,7 @@ void reports6()
                         cin >> op2;
                         cout << endl;
 
-                        auxLC = sel->listaC->inicio;
+                        auxLC = sel->fil->listaC->inicio;
                         int si = 0;
                         while(auxLC != NULL)
                         {
@@ -1264,7 +1296,7 @@ void reports6()
                         }
                     } else if(op01 == "2")
                     {
-                        sel->listaC->graficar_capas();
+                        sel->fil->listaC->graficar_capas();
                     } else
                     {
                         cout << "Opcion Invalida" << endl;
@@ -1360,9 +1392,13 @@ nodoabb* selectIm()
     return ret;
 }
 
+/*
 nodoabb* selectFilter()
+*/
+nodocircular* selectFilter()
 {
-    nodoabb *ret = NULL;
+    //nodoabb *ret = NULL;
+    nodocircular *ret = NULL;
     cout << "========== FILTROS ==========" << endl;
     string op = "";
     nodocircular *aux = filtros->primero;
@@ -1380,7 +1416,7 @@ nodoabb* selectFilter()
     {
         if(op == to_string(aux2->id))
         {
-            ret = aux2->fil;
+            ret = aux2;
             si = 1;
             return ret;
             break;
@@ -1394,9 +1430,13 @@ nodoabb* selectFilter()
     return ret;
 }
 
+/*
 nodoabb* selectFilterNo()
+*/
+nodocircular* selectFilterNo()
 {
-    nodoabb *ret = NULL;
+    //nodoabb *ret = NULL;
+    nodocircular *ret = NULL;
     cout << "===== FILTROS =====" << endl;
     string op = "";
     nodocircular *aux = filtros->primero;
@@ -1417,7 +1457,7 @@ nodoabb* selectFilterNo()
     {
         if(op == to_string(aux2->id) && (aux2->filtro != "Collage") && (aux2->filtro != "Mosaico"))
         {
-            ret = aux2->fil;
+            ret = aux2;
             si = 1;
             return ret;
             break;
