@@ -199,7 +199,7 @@ void insert1()
                         string c;
                         while(getline(sss,c,','))
                         {
-                            if((c != "x") && (c != "X") && (c != "") && (c != " "))
+                            if((c != "x") && (c != "X") && (c != "") && (c != " ") && (c != "x\r") && (c != "X\r"))
                             {
                                 string r;
                                 string g;
@@ -207,7 +207,7 @@ void insert1()
                                 stringstream colores(c);
                                 getline(colores,r,'-');
                                 getline(colores,g,'-');
-                                getline(colores,b,'\n');
+                                getline(colores,b,'\r');
                                 int ir, ig, ib;
                                 ir  = stoi(r);
                                 ig  = stoi(g);
